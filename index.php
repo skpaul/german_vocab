@@ -10,6 +10,7 @@
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
     #endregion
 
+    $randomWord = Words::selectRandomly($db);
 ?>
 
 <!DOCTYPE html>
@@ -20,37 +21,6 @@
         <?php
             Required::gtag()->html5shiv()->metaTags()->favicon()->sweetModalCSS()->omnicss();
         ?>
-
-        <style>
-            marquee {
-                border-radius: 20px;
-                border: 1px solid transparent;
-            }
-
-            marquee:hover {
-                /* background-color: #2d333b; */
-                /* border: 1px solid #bfbfbf; */
-            }
-
-            .marquee-items {
-                display: flex;
-                flex-direction: row;
-                list-style-position: inside;
-                padding: 10px;
-            }
-
-            .marquee-items li {
-                margin-right: 20px;
-                color: var(--scroll-color);
-            }
-
-            .marquee-items li>a {
-
-                /* color:#FFF; */
-            }
-
-
-        </style>
 
     </head>
 
@@ -75,8 +45,9 @@
                 <div class="ba bc bg-1">
                     <div class="container-700 mv-1.5">
                         <div class="round bg-2 ba bc pv-2.0 ph-1.5">
-                            <div class="fs-140% fw-500 bn mb-2.5 lh-1.3">Inspection & Audit Management System</div>
-                            <a class="green-rest bc-0 br-5 ph-0.7 pv-0.4 button" href="<?= BASE_URL ?>/app/login/login.php">Login</a>
+                            <div><?=$randomWord->english?></div>
+                            <div><?=$randomWord->german?></div>
+                            <div><?=$randomWord->banglaPro?></div>
                         </div>
                     </div>
                 </div>
