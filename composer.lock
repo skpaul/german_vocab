@@ -1,0 +1,68 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "5babd5b176570132108c7c2a1d6f1f0f",
+    "packages": [
+        {
+            "name": "nobanno/nobanno",
+            "version": "v2.1.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/skpaul/nobanno.git",
+                "reference": "ec5fa662b899eba25dd27683b5fe237e3258a8d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/skpaul/nobanno/zipball/ec5fa662b899eba25dd27683b5fe237e3258a8d0",
+                "reference": "ec5fa662b899eba25dd27683b5fe237e3258a8d0",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Nobanno\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Saumitra Kumar Paul",
+                    "email": "skpaul@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Nobanno is a set of PHP classes to build applications quickly.",
+            "homepage": "https://skpaul.github.io/nobanno",
+            "keywords": [
+                "data validator",
+                "database",
+                "datetime",
+                "json",
+                "logging"
+            ],
+            "support": {
+                "issues": "https://github.com/skpaul/nobanno/issues",
+                "source": "https://github.com/skpaul/nobanno/tree/v2.1.7"
+            },
+            "time": "2024-07-31T10:10:02+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": [],
+    "plugin-api-version": "2.6.0"
+}

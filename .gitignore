@@ -1,0 +1,13 @@
+CONSTANTS.php
+error.log
+launch.json
+applicant-images
+countlog.txt
+auto-pull
+vendor
+.vscode
+
+# exclude everything inside this directory
+applicant-images/*
+# but keep 'applicant-images' directory in git
+!applicant-images/.gitkeep 
