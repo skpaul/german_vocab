@@ -11,6 +11,26 @@
     #endregion
 
     $randomWord = Words::selectRandomly($db);
+
+    function run_curl($url, $json_data) {
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        $response = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $response;
+
+    }
 ?>
 
 <!DOCTYPE html>
@@ -48,8 +68,38 @@
                             <div><?=$randomWord->english?></div>
                             <div><?=$randomWord->german?></div>
                             <div><?=$randomWord->banglaPro?></div>
+                            <div>\"Oder\" is pronounced like this:\n\n**oh-der**\n\n* **oh** as in the English word \"go\"\n* **der** as in the English word \"fur\" \n\n**Important Note:**  In German, the \"e\" at the end of \"oder\" is not pronounced. \n</div>
                         </div>
                     </div>
+                </div>
+                <div>
+                    <?php
+                        $YOUR_API_KEY=""; //Generate API Key at Google AI studio and use it here.
+
+                        $prompt="pronouciate wasser in german";
+                        
+                        $json_data = '{
+                        
+                            "contents": [{
+                        
+                                "parts":[{
+                        
+                                "text":"'.$prompt.'"}]}]}';
+                        
+                        $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
+                        
+                                
+                        
+                        $response=run_curl($url,$json_data);
+                        
+                        $response = json_decode($response, false);
+                        // return $this->candidates[0]->content->parts;
+                        $content = $response->candidates[0]->content->parts[0]->text;
+                        // var_dump($content);
+                        $content1 =  str_replace("\n", "<br>", $content);
+                        echo($content1);
+
+                    ?>
                 </div>
         </div><!-- .container -->
     </main>
