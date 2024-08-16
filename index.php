@@ -65,7 +65,7 @@
                         <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                             <div><?=$randomWord->english?></div>
                             <div><?=$randomWord->german?></div>
-                            <div><?=$randomWord->banglaPro?></div>
+                            <div><?=$randomWord->pronunciation?></div>
                         </div>
                     </div>
                 </div>
@@ -80,7 +80,9 @@
                             echo $result['text'] . "\n";
                         */
 
-                        $prompt="pronouciate ". $randomWord->german ." in german";
+                        //Phonetic spelling of the german word 'oder'
+                        // $prompt="pronouciate ". $randomWord->german ." in german";
+                        $prompt="Phonetic spelling of ". $randomWord->german ." in German";
                         
                         $json_data = '{
                         
@@ -92,10 +94,7 @@
                         
                         $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
                         
-                                
-                        
                         $response=run_curl($url,$json_data);
-                        
                         $response = json_decode($response, false);
                         // return $this->candidates[0]->content->parts;
                         $content = $response->candidates[0]->content->parts[0]->text;
@@ -105,8 +104,6 @@
                         $Parsedown = new Parsedown();
 
                         echo $Parsedown->text($content1); 
-                        // echo($content1);
-
                     ?>
                 </div>
         </div><!-- .container -->

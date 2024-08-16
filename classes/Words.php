@@ -4,7 +4,10 @@
         public int $id;
         public ?string $english;
         public ?string $german;
-        public ?string $banglaPro;
+        public ?string $pronunciation;
+        public ?string $definition;
+        public ?string $number;
+        public ?string $partsOfSpeech;
         public ?string $createdOn;
         public ?string $updatedOn;
        
