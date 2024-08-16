@@ -8,17 +8,17 @@
     //defined("LIBRARY_PATH") or define("LIBRARY_PATH", realpath(dirname(__FILE__) . '/library'));
 
     //Application settings
-    defined("BASE_URL") or define("BASE_URL", "http://localhost/dia/school-visit-entry"); 
-    defined("ORGANIZATION_SHORT_NAME") or define("ORGANIZATION_SHORT_NAME", "DIA");
-    defined("ORGANIZATION_FULL_NAME") or define("ORGANIZATION_FULL_NAME", "Directorate of Inspection and Audit");
-    defined("GENERIC_APPLICATION_NAME") or define("GENERIC_APPLICATION_NAME", "School Visit Entry");
+    defined("BASE_URL") or define("BASE_URL", "http://localhost/german_vocs"); 
+    defined("ORGANIZATION_SHORT_NAME") or define("ORGANIZATION_SHORT_NAME", "GermanVocs");
+    defined("ORGANIZATION_FULL_NAME") or define("ORGANIZATION_FULL_NAME", "German Vocabulries");
+    defined("GENERIC_APPLICATION_NAME") or define("GENERIC_APPLICATION_NAME", "GermanVocs");
     defined("ENVIRONMENT") or define("ENVIRONMENT", "DEVELOPMENT"); //DEVELOPMENT  //PRODUCTION
 
     //Database and tables
     defined("DB_SERVER") or define("DB_SERVER", "localhost");
     defined("DB_USER") or define("DB_USER", "root");
     defined("DB_PASSWORD") or define("DB_PASSWORD", "");
-    defined("DB_NAME") or define("DB_NAME", "dia_school_visit_entry");
+    defined("DB_NAME") or define("DB_NAME", "german_vocs");
     defined("SESSION_TABLE") or define("SESSION_TABLE", "sessions"); 
     
     //Application secrets
