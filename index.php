@@ -2,12 +2,14 @@
 
     declare(strict_types=1);
     require_once("Required.php");
+    require_once("vendor/autoload.php");
 
     #region Library instance declaration & initialization
         $logger = new Logger(ROOT_DIRECTORY);
         $crypto = new Cryptographer(SECRET_KEY);
         $clock = new Clock();
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
+        use Google\Cloud\Translate\V2\TranslateClient;
     #endregion
 
     $randomWord = Words::selectRandomly($db);
@@ -57,26 +59,28 @@
     </header>
     <main class="main">
         <div class="container mv-3.0">
-            <!-- <marquee class="mt150" id="marquee" behavior="" direction="left" scrollamount="5">
-                    <ul class="marquee-items">
-                        <li><a href="$fileUrl" target="_blank">Here is the notice</a></li>
-                    </ul>
-                </marquee> -->
+
                 <div class="ba bc bg-1">
                     <div class="container-700 mv-1.5">
                         <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                             <div><?=$randomWord->english?></div>
                             <div><?=$randomWord->german?></div>
                             <div><?=$randomWord->banglaPro?></div>
-                            <div>\"Oder\" is pronounced like this:\n\n**oh-der**\n\n* **oh** as in the English word \"go\"\n* **der** as in the English word \"fur\" \n\n**Important Note:**  In German, the \"e\" at the end of \"oder\" is not pronounced. \n</div>
                         </div>
                     </div>
                 </div>
                 <div>
                     <?php
-                        $YOUR_API_KEY=""; //Generate API Key at Google AI studio and use it here.
 
-                        $prompt="pronouciate wasser in german";
+                        $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
+                        /*
+                            $translate = new TranslateClient(['key' => $apiKey ]);
+                            // Translate text from english to german.
+                            $result = $translate->translate('An_English_Word', [ 'target' => 'gr' ]);
+                            echo $result['text'] . "\n";
+                        */
+
+                        $prompt="pronouciate ". $randomWord->german ." in german";
                         
                         $json_data = '{
                         
@@ -86,7 +90,7 @@
                         
                                 "text":"'.$prompt.'"}]}]}';
                         
-                        $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=";
+                        $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
                         
                                 
                         
@@ -97,7 +101,11 @@
                         $content = $response->candidates[0]->content->parts[0]->text;
                         // var_dump($content);
                         $content1 =  str_replace("\n", "<br>", $content);
-                        echo($content1);
+                        // $content1 =  str_replace("* ", "-", $content1);
+                        $Parsedown = new Parsedown();
+
+                        echo $Parsedown->text($content1); 
+                        // echo($content1);
 
                     ?>
                 </div>

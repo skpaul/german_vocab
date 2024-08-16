@@ -23,7 +23,8 @@
     
     //Application secrets
     defined("SECRET_KEY") or define("SECRET_KEY", "Kua2E9MQ9p"); //SECRET_KEY is required for Cryptographer.php TODO: Must change the secret key before live
-
+    defined("GEMINI_API_KEY") or define("GEMINI_API_KEY", "");
+    
     // cd .. then 
     // cd var/www/html/xdev/demo/bjsc-departmental
 ?>
