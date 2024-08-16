@@ -11,7 +11,7 @@
  Target Server Version : 100417
  File Encoding         : 65001
 
- Date: 16/08/2024 11:27:40
+ Date: 16/08/2024 11:41:52
 */
 
 SET NAMES utf8mb4;
@@ -24,13 +24,10 @@ DROP TABLE IF EXISTS `antonyms`;
 CREATE TABLE `antonyms`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `wordId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
-  `antonymsId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
+  `antonymWordId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
+  `createdOn` date NULL DEFAULT curdate,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of antonyms
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for synonyms
@@ -39,13 +36,10 @@ DROP TABLE IF EXISTS `synonyms`;
 CREATE TABLE `synonyms`  (
   `id` int NOT NULL AUTO_INCREMENT,
   `wordId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
-  `synonymId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
+  `synonymWordId` int NULL DEFAULT NULL COMMENT 'id column in words table.',
+  `createdOn` date NULL DEFAULT curdate,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of synonyms
--- ----------------------------
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for words
@@ -56,12 +50,9 @@ CREATE TABLE `words`  (
   `english` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `german` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
   `banglaPro` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT 'pronunciation in bangla',
+  `createdOn` date NULL DEFAULT curdate COMMENT 'asdf',
+  `updatedOn` date NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of words
--- ----------------------------
-INSERT INTO `words` VALUES (1, 'I', 'Ich', 'ঈশ');
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
