@@ -11,7 +11,7 @@
  Target Server Version : 100417
  File Encoding         : 65001
 
- Date: 18/08/2024 23:02:45
+ Date: 19/08/2024 00:05:47
 */
 
 SET NAMES utf8mb4;
@@ -64,12 +64,15 @@ CREATE TABLE `examples`  (
   `updatedOn` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
   `rowVersion` int NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of examples
 -- ----------------------------
 INSERT INTO `examples` VALUES (1, 'I am John', 'Ich bin John', b'1', '2024-08-17 23:24:52', '2024-08-18 22:24:34', 0);
+INSERT INTO `examples` VALUES (2, 'Good Evening!', 'Guten Abend!\r', b'1', '2024-08-18 23:55:39', '2024-08-18 23:55:41', 0);
+INSERT INTO `examples` VALUES (3, 'Good night!', 'Guten Abend!\r', b'1', '2024-08-18 23:58:52', '2024-08-18 23:58:52', 0);
+INSERT INTO `examples` VALUES (4, 'Good night!', 'Gute Nacht', b'1', '2024-08-19 00:04:09', '2024-08-19 00:04:17', 0);
 
 -- ----------------------------
 -- Table structure for genders
@@ -99,12 +102,16 @@ CREATE TABLE `histories`  (
   `updatedOn` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `reference_index`(`userId` ASC, `wordId` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of histories
 -- ----------------------------
-INSERT INTO `histories` VALUES (3, 1, 1, 17, '2024-08-18 22:05:29', '2024-08-18 22:59:23');
+INSERT INTO `histories` VALUES (3, 1, 1, 19, '2024-08-18 22:05:29', '2024-08-18 23:55:46');
+INSERT INTO `histories` VALUES (4, 1, 2, 2, '2024-08-18 23:32:35', '2024-08-18 23:57:31');
+INSERT INTO `histories` VALUES (5, 1, 3, 1, '2024-08-18 23:55:51', '2024-08-18 23:55:51');
+INSERT INTO `histories` VALUES (6, 1, 4, 1, '2024-08-19 00:00:00', '2024-08-19 00:00:00');
+INSERT INTO `histories` VALUES (7, 1, 6, 1, '2024-08-19 00:05:02', '2024-08-19 00:05:02');
 
 -- ----------------------------
 -- Table structure for numbers
@@ -160,7 +167,7 @@ CREATE TABLE `sessions`  (
 -- ----------------------------
 -- Records of sessions
 -- ----------------------------
-INSERT INTO `sessions` VALUES (29, '{\"userId\":1}', '2024-08-18 22:59:23');
+INSERT INTO `sessions` VALUES (29, '{\"userId\":1}', '2024-08-19 00:05:02');
 
 -- ----------------------------
 -- Table structure for synonyms
@@ -218,15 +225,22 @@ CREATE TABLE `words`  (
   `createdOn` timestamp NOT NULL DEFAULT current_timestamp,
   `updatedOn` timestamp NOT NULL DEFAULT current_timestamp ON UPDATE CURRENT_TIMESTAMP,
   `rowVersion` int NOT NULL DEFAULT 0,
+  `article` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL,
+  `derivativeOf` int NULL DEFAULT NULL COMMENT 'a word formed from another word. The word “childish” is a derivative of “child.',
   PRIMARY KEY (`id`) USING BTREE,
   INDEX `german_index`(`german` ASC) USING BTREE,
   INDEX `reference_index`(`number` ASC, `gender` ASC, `partsOfSpeech` ASC) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of words
 -- ----------------------------
-INSERT INTO `words` VALUES (1, 'I', 'Ich', '/ɪç/', '[e-sh] [ish]', NULL, NULL, 0, 0, 0, '2024-08-18 10:28:36', '2024-08-18 22:43:43', 0);
+INSERT INTO `words` VALUES (1, 'I', 'Ich', '/ɪç/', '[e-sh] [ish]', NULL, NULL, 0, 0, 0, '2024-08-18 10:28:36', '2024-08-18 22:43:43', 0, NULL, NULL);
+INSERT INTO `words` VALUES (2, 'Evening', 'Abend', '/ˈaːbɛnt/', 'ah-bent', NULL, NULL, 1, 0, 1, '2024-08-18 23:32:30', '2024-08-18 23:33:54', 0, NULL, NULL);
+INSERT INTO `words` VALUES (3, 'Evening', 'Abende', NULL, NULL, NULL, NULL, 2, 0, 1, '2024-08-18 23:52:29', '2024-08-18 23:54:48', 0, 'der', 2);
+INSERT INTO `words` VALUES (4, 'Night', 'Abend', '/ˈaːbɛnt/', 'ah-bent', NULL, NULL, 1, 0, 1, '2024-08-18 23:32:30', '2024-08-18 23:33:54', 0, NULL, 2);
+INSERT INTO `words` VALUES (5, 'Night', 'Nacht', 'Nácht', NULL, NULL, NULL, 0, 0, 1, '2024-08-19 00:01:30', '2024-08-19 00:02:25', 0, NULL, NULL);
+INSERT INTO `words` VALUES (6, 'Good', 'Gute', NULL, NULL, NULL, NULL, 0, 0, 0, '2024-08-19 00:04:56', '2024-08-19 00:04:56', 0, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for words_with_500_words

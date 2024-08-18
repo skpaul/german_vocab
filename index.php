@@ -108,7 +108,7 @@
 
                 <?php
                     foreach ($examples as $example) {
-                        echo $example->english;
+                        echo $example->german . ' - ' . $example->english;
                     }
                 ?>
                 
@@ -135,7 +135,7 @@
                                 $prompt = "phonetic spelling";
                             }
                             else{
-                                $prompt .= " AND phonetic spelling";
+                                $prompt = "$prompt AND phonetic spelling";
                             }
                         }
                         else{
