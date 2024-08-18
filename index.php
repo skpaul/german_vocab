@@ -1,6 +1,13 @@
 <?php
-
     declare(strict_types=1);
+
+    header("Access-Control-Allow-Origin: *");
+    header('Access-Control-Allow-Credentials: true');
+    header('Access-Control-Max-Age: 86400');
+    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    // header('X-Frame-Options', 'ALLOW FROM *');
+
+
     require_once("Required.php");
     require_once("vendor/autoload.php");
 
@@ -10,8 +17,10 @@
         $clock = new Clock();
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
         use Google\Cloud\Translate\V2\TranslateClient;
+        $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
     #endregion
 
+    
     $randomWord = Words::selectRandomly($db);
 
     function run_curl($url, $json_data) {
@@ -69,10 +78,9 @@
                         </div>
                     </div>
                 </div>
+                <iframe sandbox="allow-forms allow-scripts" src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>
                 <div>
                     <?php
-
-                        $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
                         /*
                             $translate = new TranslateClient(['key' => $apiKey ]);
                             // Translate text from english to german.
@@ -82,7 +90,7 @@
 
                         //Phonetic spelling of the german word 'oder'
                         // $prompt="pronouciate ". $randomWord->german ." in german";
-                        $prompt="Phonetic spelling of ". $randomWord->german ." in German";
+                        $prompt="IPA and phonetic spelling of the word '". $randomWord->german ."' in German";
                         
                         $json_data = '{
                         
@@ -123,13 +131,10 @@
     <script>
         var base_url = '<?php echo BASE_URL; ?>';
         $(function() {
-            $('#marquee').mouseover(function() {
-                this.setAttribute('scrollamount', 0, 0);
-                $(this).trigger('stop');
-            }).mouseout(function() {
-                this.setAttribute('scrollamount', 5, 0);
-                $(this).trigger('start');
-            });
+            // $.get('https://www.howtopronounce.com/german/ich', function(html) {
+            //     let kk = $(html).find("#pronouncedContents").html();
+            //     alert(kk);
+            // });
 
 
             function fades($div, cb) {
