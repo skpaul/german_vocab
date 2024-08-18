@@ -1,10 +1,10 @@
 <?php
     declare(strict_types=1);
 
-    header("Access-Control-Allow-Origin: *");
-    header('Access-Control-Allow-Credentials: true');
-    header('Access-Control-Max-Age: 86400');
-    header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+    // header("Access-Control-Allow-Origin: *");
+    // header('Access-Control-Allow-Credentials: true');
+    // header('Access-Control-Max-Age: 86400');
+    // header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     // header('X-Frame-Options', 'ALLOW FROM *');
 
 
@@ -16,32 +16,58 @@
         $crypto = new Cryptographer(SECRET_KEY);
         $clock = new Clock();
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
+        $validable = new DataValidator();
         use Google\Cloud\Translate\V2\TranslateClient;
         $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
     #endregion
 
     
-    $randomWord = Words::selectRandomly($db);
+
 
     function run_curl($url, $json_data) {
-
         $ch = curl_init($url);
-
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-
         curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
-
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
         $response = curl_exec($ch);
-
         curl_close($ch);
-
         return $response;
-
     }
+
+    #region Session
+        $isLoggedin = false;
+        if(isset($_GET["session"]) && !empty($_GET["session"])){
+            try {
+                //'session' parameter must be present in query string-
+                $encSessionId = $validable->title("Session parameter")->get("session")->required()->asString(false)->validate();
+                // $sessionId = $crypto->decrypt($encSessionId);
+                $sessionId = $encSessionId; //TODO: For temporary use. Must use encrypted id.
+                if (!$sessionId) {
+                    unset($db);
+                    HttpHeader::redirect(BASE_URL . "/sorry.php?msg=Session parameter is invalid.");
+                }
+
+                //Session() constructor requires a connected Database instance.
+                $session = new Session($db, SESSION_TABLE);
+                $session->continue((int)$sessionId);
+                $userId = $session->getData("userId");
+                $isLoggedin = true;
+            } catch (\SessionException $th) {
+                HttpHeader::redirect(BASE_URL . "/sorry.php?msg=Invalid session.");
+            } catch (ValidationException $exp) {
+                HttpHeader::redirect(BASE_URL . "/sorry.php?msg=Invalid request.");
+            }
+        }
+    #endregion
+
+    $randomWord = Words::selectRandomly($db);
+    if($isLoggedin){
+        Histories::set($userId, $randomWord->id, $db);
+    }
+    $examples = Examples::get(trim($randomWord->german), $db);
+
+    $parsedown = new Parsedown();
 ?>
 
 <!DOCTYPE html>
@@ -68,17 +94,24 @@
     </header>
     <main class="main">
         <div class="container mv-3.0">
-
                 <div class="ba bc bg-1">
                     <div class="container-700 mv-1.5">
                         <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                             <div><?=$randomWord->english?></div>
                             <div><?=$randomWord->german?></div>
-                            <div><?=$randomWord->pronunciation?></div>
+                            <div>Gender- <?=$randomWord->gender?></div>
+                            <div>Number- <?=$randomWord->number?></div>
+                            <div>Parts of Speech <?=$randomWord->partsOfSpeech?></div>
                         </div>
                     </div>
                 </div>
-                <iframe sandbox="allow-forms allow-scripts" src="https://www.w3schools.com" title="W3Schools Free Online Web Tutorials"></iframe>
+
+                <?php
+                    foreach ($examples as $example) {
+                        echo $example->english;
+                    }
+                ?>
+                
                 <div>
                     <?php
                         /*
@@ -88,30 +121,54 @@
                             echo $result['text'] . "\n";
                         */
 
-                        //Phonetic spelling of the german word 'oder'
-                        // $prompt="pronouciate ". $randomWord->german ." in german";
-                        $prompt="IPA and phonetic spelling of the word '". $randomWord->german ."' in German";
                         
-                        $json_data = '{
-                        
-                            "contents": [{
-                        
-                                "parts":[{
-                        
-                                "text":"'.$prompt.'"}]}]}';
-                        
-                        $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
-                        
-                        $response=run_curl($url,$json_data);
-                        $response = json_decode($response, false);
-                        // return $this->candidates[0]->content->parts;
-                        $content = $response->candidates[0]->content->parts[0]->text;
-                        // var_dump($content);
-                        $content1 =  str_replace("\n", "<br>", $content);
-                        // $content1 =  str_replace("* ", "-", $content1);
-                        $Parsedown = new Parsedown();
+                        $prompt = "";
+                        if(!isset($randomWord->ipa) || empty($randomWord->ipa)){
+                            $prompt = "IPA";
+                        }
+                        else{
+                            echo 'IPA : ' .  $randomWord->ipa; 
+                        }
 
-                        echo $Parsedown->text($content1); 
+                        if(!isset($randomWord->phoneticSpelling) || empty($randomWord->phoneticSpelling)){
+                            if(empty($prompt)){
+                                $prompt = "phonetic spelling";
+                            }
+                            else{
+                                $prompt .= " AND phonetic spelling";
+                            }
+                        }
+                        else{
+                            echo '<br>phonetic Spelling : ' .  $randomWord->phoneticSpelling; 
+                        }
+
+                        if(!empty($prompt)){
+                            $prompt .= "  of the word '". $randomWord->german ."' in German";
+
+                            //Phonetic spelling of the german word 'oder'
+                            // $prompt="pronouciate ". $randomWord->german ." in german";
+                            $prompt="IPA and phonetic spelling of the word '". $randomWord->german ."' in German";
+                            
+                            $json_data = '{
+                            
+                                "contents": [{
+                            
+                                    "parts":[{
+                            
+                                    "text":"'.$prompt.'"}]}]}';
+                            
+                            $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
+                            
+                            $response=run_curl($url,$json_data);
+                            $response = json_decode($response, false);
+                            // return $this->candidates[0]->content->parts;
+                            $content = $response->candidates[0]->content->parts[0]->text;
+                            // var_dump($content);
+                            $content1 =  str_replace("\n", "<br>", $content);
+                            // $content1 =  str_replace("* ", "-", $content1);
+                           
+                            echo $parsedown->text($content1); 
+                        }                        
                     ?>
                 </div>
         </div><!-- .container -->

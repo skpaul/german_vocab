@@ -8,10 +8,10 @@
     //defined("LIBRARY_PATH") or define("LIBRARY_PATH", realpath(dirname(__FILE__) . '/library'));
 
     //Application settings
-    defined("BASE_URL") or define("BASE_URL", "http://localhost/german_vocs"); 
-    defined("ORGANIZATION_SHORT_NAME") or define("ORGANIZATION_SHORT_NAME", "GermanVocs");
+    defined("BASE_URL") or define("BASE_URL", "http://localhost/german_vocab"); 
+    defined("ORGANIZATION_SHORT_NAME") or define("ORGANIZATION_SHORT_NAME", "GermanVocab");
     defined("ORGANIZATION_FULL_NAME") or define("ORGANIZATION_FULL_NAME", "German Vocabulries");
-    defined("GENERIC_APPLICATION_NAME") or define("GENERIC_APPLICATION_NAME", "GermanVocs");
+    defined("GENERIC_APPLICATION_NAME") or define("GENERIC_APPLICATION_NAME", "GermanVocab");
     defined("ENVIRONMENT") or define("ENVIRONMENT", "DEVELOPMENT"); //DEVELOPMENT  //PRODUCTION
 
     //Database and tables
