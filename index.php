@@ -22,9 +22,6 @@
         $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
     #endregion
 
-    
-
-
     function run_curl($url, $json_data) {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
@@ -42,8 +39,8 @@
             try {
                 //'session' parameter must be present in query string-
                 $encSessionId = $validable->title("Session parameter")->get("session")->required()->asString(false)->validate();
-                // $sessionId = $crypto->decrypt($encSessionId);
-                $sessionId = $encSessionId; //TODO: For temporary use. Must use encrypted id.
+                $sessionId = $crypto->decrypt($encSessionId);
+                // $sessionId = $encSessionId; //TODO: For temporary use. Must use encrypted id.
                 if (!$sessionId) {
                     unset($db);
                     HttpHeader::redirect(BASE_URL . "/sorry.php?msg=Session parameter is invalid.");
@@ -62,11 +59,19 @@
         }
     #endregion
 
-    $randomWord = Words::selectRandomly($db);
-    if($isLoggedin){
-        Histories::set($userId, $randomWord->id, $db);
+    if(isset($_GET["word"]) && !empty($_GET["word"])){
+
+        $wordDetails = Words::findGerman(trim($_GET["word"]), $db);
     }
-    $examples = Examples::get(trim($randomWord->german), $db);
+    else{
+        $wordDetails = Words::selectRandomly($db);
+    }
+
+    
+    if($isLoggedin){
+        Histories::set($userId, $wordDetails->id, $db);
+    }
+    $examples = Examples::get(trim($wordDetails->german), $db);
 
     $parsedown = new Parsedown();
 ?>
@@ -98,12 +103,17 @@
                 <div class="ba bc bg-1">
                     <div class="container-700 mv-1.5">
                         <div class="round bg-2 ba bc pv-2.0 ph-1.5">
-                            <div><?=$randomWord->english?></div>
-                            <div><?=$randomWord->german?></div>
-                            <div>Gender- <?=$randomWord->gender?></div>
-                            <div>Number- <?=$randomWord->number?></div>
-                            <div>Parts of Speech <?=$randomWord->partsOfSpeech?></div>
+                            <div><?=$wordDetails->german?></div>
+                            <div><?=$wordDetails->english?></div>
+                            <div>Definition <?=$wordDetails->definition?></div>
+                            <div>Gender- <?=$wordDetails->gender?></div>
+                            <div>Number- <?=$wordDetails->number?></div>
+                            <div>Parts of Speech <?=$wordDetails->partsOfSpeech?></div>
+                            <div>Pronunciation <?=$wordDetails->pronunciation?></div>
+                            
                         </div>
+
+                        <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
                     </div>
                 </div>
 
@@ -124,14 +134,14 @@
 
                         
                         $prompt = "";
-                        if(!isset($randomWord->ipa) || empty($randomWord->ipa)){
+                        if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
                             $prompt = "IPA";
                         }
                         else{
-                            echo 'IPA : ' .  $randomWord->ipa; 
+                            echo 'IPA : ' .  $wordDetails->ipa; 
                         }
 
-                        if(!isset($randomWord->phoneticSpelling) || empty($randomWord->phoneticSpelling)){
+                        if(!isset($wordDetails->phoneticSpelling) || empty($wordDetails->phoneticSpelling)){
                             if(empty($prompt)){
                                 $prompt = "phonetic spelling";
                             }
@@ -140,15 +150,16 @@
                             }
                         }
                         else{
-                            echo '<br>phonetic Spelling : ' .  $randomWord->phoneticSpelling; 
+                            echo '<br>phonetic Spelling : ' .  $wordDetails->phoneticSpelling; 
+                            echo '<a href="https://www.howtopronounce.com/german/' .$wordDetails->german . '" target="_blank">Listen</a>';
                         }
 
                         if(!empty($prompt)){
-                            $prompt .= "  of the word '". $randomWord->german ."' in German";
+                            $prompt .= "  of the word '". $wordDetails->german ."' in German";
 
                             //Phonetic spelling of the german word 'oder'
-                            // $prompt="pronouciate ". $randomWord->german ." in german";
-                            $prompt="IPA and phonetic spelling of the word '". $randomWord->german ."' in German";
+                            // $prompt="pronouciate ". $wordDetails->german ." in german";
+                            $prompt="IPA and phonetic spelling of the word '". $wordDetails->german ."' in German";
                             
                             $json_data = '{
                             
