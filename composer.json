@@ -1,7 +1,6 @@
 {
     "require": {
         "nobanno/nobanno": "2.1.7",
-        "erusev/parsedown": "^1.7",
-        "google/cloud-translate": "^1.18"
+        "erusev/parsedown": "^1.7"
     }
 }

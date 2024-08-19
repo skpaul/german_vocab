@@ -18,6 +18,7 @@
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
         $validable = new DataValidator();
         use Google\Cloud\Translate\V2\TranslateClient;
+        use Orhanerday\OpenAi\OpenAi;
         $apiKey= GEMINI_API_KEY; //Generate API Key at Google AI studio and use it here.
     #endregion
 
@@ -170,6 +171,8 @@
                             echo $parsedown->text($content1); 
                         }                        
                     ?>
+
+
                 </div>
         </div><!-- .container -->
     </main>
