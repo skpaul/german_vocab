@@ -87,160 +87,189 @@
 
     </head>
 
-<body>
-    <header class="header">
-        <div class="container">
-            <!-- <div class="content"> -->
-            <?php
-            echo HeaderBrand::prepare(array("baseUrl" => BASE_URL, "hambMenu" => true));
-            echo ApplicantHeaderNav::prepare(array("baseUrl" => BASE_URL));
-            ?>
-            <!-- </div> -->
-        </div>
-    </header>
-    <main class="main">
-        <div class="container mv-3.0">
-                <div class="ba bc bg-1">
-                    <div class="container-700 mv-1.5">
-                        <div class="round bg-2 ba bc pv-2.0 ph-1.5">
-                            <div><?=$wordDetails->german?></div>
-                            <div><?=$wordDetails->english?></div>
-                            <div>Definition <?=$wordDetails->definition?></div>
-                            <div>Gender- <?=$wordDetails->gender?></div>
-                            <div>Number- <?=$wordDetails->number?></div>
-                            <div>Parts of Speech <?=$wordDetails->partsOfSpeech?></div>
-                            <div>Pronunciation <?=$wordDetails->pronunciation?></div>
-                            
-                        </div>
-
-                        <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
-                    </div>
-                </div>
-
+    <body>
+        <header class="header">
+            <div class="container">
+                <!-- <div class="content"> -->
                 <?php
-                    foreach ($examples as $example) {
-                        echo $example->german . ' - ' . $example->english;
-                    }
+                echo HeaderBrand::prepare(array("baseUrl" => BASE_URL, "hambMenu" => true));
+                echo ApplicantHeaderNav::prepare(array("baseUrl" => BASE_URL));
                 ?>
-                
-                <div>
+                <!-- </div> -->
+            </div>
+        </header>
+        <main class="main">
+            <div class="container mv-3.0">
+                    <div class="ba bc bg-1">
+                        <div class="container-700 mv-1.5">
+                            <div class="round bg-2 ba bc pv-2.0 ph-1.5">
+                                <div><?=$wordDetails->german?></div>
+                                <div><?=$wordDetails->english?></div>
+                                <div>Definition <?=$wordDetails->definition?></div>
+                                <div>Gender- <?=$wordDetails->gender?></div>
+                                <div>Number- <?=$wordDetails->number?></div>
+                                <div>Parts of Speech <?=$wordDetails->partsOfSpeech?></div>
+                                <div>Pronunciation <?=$wordDetails->pronunciation?></div>
+                                
+                            </div>
+
+                            <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
+                        </div>
+                    </div>
+
                     <?php
-                        /*
-                            $translate = new TranslateClient(['key' => $apiKey ]);
-                            // Translate text from english to german.
-                            $result = $translate->translate('An_English_Word', [ 'target' => 'gr' ]);
-                            echo $result['text'] . "\n";
-                        */
-
-                        
-                        $prompt = "";
-                        if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
-                            $prompt = "IPA";
+                        foreach ($examples as $example) {
+                            echo $example->german . ' - ' . $example->english;
                         }
-                        else{
-                            echo 'IPA : ' .  $wordDetails->ipa; 
-                        }
+                    ?>
+                    
+                    <div>
+                        <?php
+                            /*
+                                $translate = new TranslateClient(['key' => $apiKey ]);
+                                // Translate text from english to german.
+                                $result = $translate->translate('An_English_Word', [ 'target' => 'gr' ]);
+                                echo $result['text'] . "\n";
+                            */
 
-                        if(!isset($wordDetails->phoneticSpelling) || empty($wordDetails->phoneticSpelling)){
-                            if(empty($prompt)){
-                                $prompt = "phonetic spelling";
+                            
+                            $prompt = "";
+                            if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
+                                $prompt = "IPA";
                             }
                             else{
-                                $prompt = "$prompt AND phonetic spelling";
+                                echo 'IPA : ' .  $wordDetails->ipa; 
                             }
-                        }
-                        else{
-                            echo '<br>phonetic Spelling : ' .  $wordDetails->phoneticSpelling; 
-                            echo '<a href="https://www.howtopronounce.com/german/' .$wordDetails->german . '" target="_blank">Listen</a>';
-                        }
 
-                        if(!empty($prompt)){
-                            $prompt .= "  of the word '". $wordDetails->german ."' in German";
-
-                            //Phonetic spelling of the german word 'oder'
-                            // $prompt="pronouciate ". $wordDetails->german ." in german";
-                            $prompt="IPA and phonetic spelling of the word '". $wordDetails->german ."' in German";
-                            
-                            $json_data = '{
-                            
-                                "contents": [{
-                            
-                                    "parts":[{
-                            
-                                    "text":"'.$prompt.'"}]}]}';
-                            
-                            $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
-                            
-                            $response=run_curl($url,$json_data);
-                            $response = json_decode($response, false);
-                            // return $this->candidates[0]->content->parts;
-                            $content = $response->candidates[0]->content->parts[0]->text;
-                            // var_dump($content);
-                            $content1 =  str_replace("\n", "<br>", $content);
-                            // $content1 =  str_replace("* ", "-", $content1);
-                           
-                            echo $parsedown->text($content1); 
-                        }                        
-                    ?>
-
-
-                </div>
-        </div><!-- .container -->
-    </main>
-    <footer>
-        <div class="container">
-            <div class="divider-h bg-gray-8"></div>
-            <?php
-            echo Footer::prepare(array());
-            ?>
-        </div>
-    </footer>
-
-    <?php
-    Required::jquery()->hamburgerMenu();
-    ?>
-    <script>
-        var base_url = '<?php echo BASE_URL; ?>';
-        $(function() {
-            // $.get('https://www.howtopronounce.com/german/ich', function(html) {
-            //     let kk = $(html).find("#pronouncedContents").html();
-            //     alert(kk);
-            // });
-
-
-            function fades($div, cb) {
-                $div.fadeIn(300, function() {
-                    myTimeout = setTimeout(function() {
-                        $div.fadeOut(400, function() {
-                            var $next = $div.next();
-                            if ($next.length > 0) {
-                                fades($next, cb);
-                            } else {
-                                // The last element has faded away, call the callback
-                                cb();
+                            if(!isset($wordDetails->phoneticSpelling) || empty($wordDetails->phoneticSpelling)){
+                                if(empty($prompt)){
+                                    $prompt = "phonetic spelling";
+                                }
+                                else{
+                                    $prompt = "$prompt AND phonetic spelling";
+                                }
                             }
-                        }); //fadeout ends
+                            else{
+                                echo '<br>phonetic Spelling : ' .  $wordDetails->phoneticSpelling; 
+                                echo '<a href="https://www.howtopronounce.com/german/' .$wordDetails->german . '" target="_blank">Listen</a>';
+                            }
+
+                            if(!empty($prompt)){
+                                $prompt .= "  of the word '". $wordDetails->german ."' in German";
+
+                                //Phonetic spelling of the german word 'oder'
+                                // $prompt="pronouciate ". $wordDetails->german ." in german";
+                                $prompt="IPA and phonetic spelling of the word '". $wordDetails->german ."' in German";
+                                
+                                $json_data = '{
+                                
+                                    "contents": [{
+                                
+                                        "parts":[{
+                                
+                                        "text":"'.$prompt.'"}]}]}';
+                                
+                                $url="https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=$apiKey";
+                                
+                                $response=run_curl($url,$json_data);
+                                $response = json_decode($response, false);
+                                // return $this->candidates[0]->content->parts;
+                                $content = $response->candidates[0]->content->parts[0]->text;
+                                // var_dump($content);
+                                $content1 =  str_replace("\n", "<br>", $content);
+                                // $content1 =  str_replace("* ", "-", $content1);
+                            
+                                echo $parsedown->text($content1); 
+                            }                        
+                        ?>
+
+                        <?php
+                            //de-DE_BirgitV3Voice,de-DE_DieterV3Voice,de-DE_ErikaV3Voice, en-US_MichaelV3Voice
+                            $ibmKey = IBM_API_KEY;
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_POST, TRUE);
+                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+                            curl_setopt($ch, CURLOPT_URL,"https://api.us-east.text-to-speech.watson.cloud.ibm.com/instances/947980ec-a4fc-447b-a6cb-257d51b3c3ad/v1/synthesize?voice=de-DE_DieterV3Voice");
+                            curl_setopt($ch, CURLOPT_USERPWD, "apikey:$ibmKey");
+                            // curl_setopt($ch, CURLOPT_SAFE_UPLOAD, TRUE);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"wasser"}');
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                            curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                            curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
+                            curl_setopt($ch, CURLOPT_HTTPHEADER,
+                                array(
+                                    "Content-Type: application/json",
+                                    "Accept: audio/mp3"
+                                )
+                            );
+                            $response = curl_exec($ch);
+                            curl_close($ch);
+                            $savefile = fopen('wasser.mp3', 'w');
+                            fwrite($savefile, $response);
+                            fclose($savefile);
+
+                            
+                            // var_dump($response);
+                            //echo $response;
+                        ?>
+
+                    </div>
+            </div><!-- .container -->
+        </main>
+        <footer>
+            <div class="container">
+                <div class="divider-h bg-gray-8"></div>
+                <?php
+                echo Footer::prepare(array());
+                ?>
+            </div>
+        </footer>
+
+        <?php
+        Required::jquery()->hamburgerMenu();
+        ?>
+        <script>
+            var base_url = '<?php echo BASE_URL; ?>';
+            $(function() {
+                // $.get('https://www.howtopronounce.com/german/ich', function(html) {
+                //     let kk = $(html).find("#pronouncedContents").html();
+                //     alert(kk);
+                // });
 
 
-                    }, 2000); //setTimfeout ends
-                });
-            }
+                function fades($div, cb) {
+                    $div.fadeIn(300, function() {
+                        myTimeout = setTimeout(function() {
+                            $div.fadeOut(400, function() {
+                                var $next = $div.next();
+                                if ($next.length > 0) {
+                                    fades($next, cb);
+                                } else {
+                                    // The last element has faded away, call the callback
+                                    cb();
+                                }
+                            }); //fadeout ends
+
+
+                        }, 2000); //setTimfeout ends
+                    });
+                }
 
 
 
 
 
-            function startFading($firstDiv) {
-                fades($firstDiv, function() {
-                    startFading($firstDiv);
-                });
-            }
+                function startFading($firstDiv) {
+                    fades($firstDiv, function() {
+                        startFading($firstDiv);
+                    });
+                }
 
-            startFading($(".a:first-child"));
+                startFading($(".a:first-child"));
 
-        }) //document.ready ends.
-    </script>
+            }) //document.ready ends.
+        </script>
 
-</body>
+    </body>
 
 </html>
