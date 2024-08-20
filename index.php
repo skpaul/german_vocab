@@ -184,35 +184,52 @@
                         ?>
 
                         <?php
-                            //de-DE_BirgitV3Voice,de-DE_DieterV3Voice,de-DE_ErikaV3Voice, en-US_MichaelV3Voice
-                            $ibmKey = IBM_API_KEY;
-                            $ch = curl_init();
-                            curl_setopt($ch, CURLOPT_POST, TRUE);
-                            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
-                            curl_setopt($ch, CURLOPT_URL,"https://api.us-east.text-to-speech.watson.cloud.ibm.com/instances/947980ec-a4fc-447b-a6cb-257d51b3c3ad/v1/synthesize?voice=de-DE_DieterV3Voice");
-                            curl_setopt($ch, CURLOPT_USERPWD, "apikey:$ibmKey");
-                            // curl_setopt($ch, CURLOPT_SAFE_UPLOAD, TRUE);
-                            curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"wasser"}');
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-                            curl_setopt($ch, CURLOPT_HEADER, TRUE);
-                            curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
-                            curl_setopt($ch, CURLOPT_HTTPHEADER,
-                                array(
-                                    "Content-Type: application/json",
-                                    "Accept: audio/mp3"
-                                )
-                            );
-                            $response = curl_exec($ch);
-                            curl_close($ch);
-                            $savefile = fopen('wasser.mp3', 'w');
-                            fwrite($savefile, $response);
-                            fclose($savefile);
+                            function createVoice(string $germanWord, string $voicePatch){
+                                //de-DE_BirgitV3Voice,de-DE_DieterV3Voice,de-DE_ErikaV3Voice, en-US_MichaelV3Voice
+                                $ibmKey = IBM_API_KEY;
+                                $ch = curl_init();
+                                curl_setopt($ch, CURLOPT_POST, TRUE);
+                                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+                                curl_setopt($ch, CURLOPT_URL,"https://api.us-east.text-to-speech.watson.cloud.ibm.com/instances/947980ec-a4fc-447b-a6cb-257d51b3c3ad/v1/synthesize?voice=de-DE_DieterV3Voice");
+                                curl_setopt($ch, CURLOPT_USERPWD, "apikey:$ibmKey");
+                                // curl_setopt($ch, CURLOPT_SAFE_UPLOAD, TRUE);
+                                curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"'. $germanWord .'"}');
+                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                                curl_setopt($ch, CURLOPT_HEADER, TRUE);
+                                curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
+                                curl_setopt($ch, CURLOPT_HTTPHEADER,
+                                    array(
+                                        "Content-Type: application/json",
+                                        "Accept: audio/mp3"
+                                    )
+                                );
+                                $response = curl_exec($ch);
+                                curl_close($ch);
 
+                                $voiceDir = ROOT_DIRECTORY . "/voices";
+                                if (!file_exists($voiceDir)) mkdir($voiceDir, 0777, true);
+                               
+                                // $savefile = fopen("voices/". strtolower($germanWord). ".mp3", 'w');
+                                $savefile = fopen($voicePatch, 'w');
+                                fwrite($savefile, $response);
+                                fclose($savefile);
+                            }
+
+                            $voiceDir = ROOT_DIRECTORY . "/voices";
+                            if (!file_exists($voiceDir)) mkdir($voiceDir, 0777, true);
                             
-                            // var_dump($response);
-                            //echo $response;
+                            $voicePatch = "$voiceDir/".strtolower($wordDetails->german) . ".mp3";  //physical path (i.e. D:/Xampp/....)
+                            if (!file_exists($voicePatch)){
+                                createVoice($wordDetails->german, $voicePatch);
+                            }
+                            $audioUrl = BASE_URL . "/voices/" . strtolower($wordDetails->german) . ".mp3";  //relative path (http://localhost/site-name/...)
                         ?>
 
+                        
+                        <audio controls>
+                            <source src="<?=$audioUrl?>" type="audio/mpeg">
+                            Your browser does not support the audio element.
+                        </audio>
                     </div>
             </div><!-- .container -->
         </main>

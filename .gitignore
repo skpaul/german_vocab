@@ -5,6 +5,7 @@ applicant-images
 countlog.txt
 auto-pull
 vendor
+voices
 .vscode
 
 # exclude everything inside this directory
