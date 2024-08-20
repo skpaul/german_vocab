@@ -74,6 +74,7 @@
     $examples = Examples::get(trim($wordDetails->german), $db);
 
     $parsedown = new Parsedown();
+    $prompt = "";
 ?>
 
 <!DOCTYPE html>
@@ -104,55 +105,63 @@
                         <div class="container-700 mv-1.5">
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                                 <div><?=$wordDetails->german?></div>
+                                <div>
+                                    <?php
+                                        if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
+                                            $prompt = "IPA";
+                                        }
+                                        else{
+                                    ?>
+                                        <?=$wordDetails->ipa?>
+                                    <?php
+                                        }
+                                    ?>
+                                </div>
+                                <div>
+                                    <?php
+                                        if(!isset($wordDetails->phoneticSpelling) || empty($wordDetails->phoneticSpelling)){
+                                            if(empty($prompt)){
+                                                $prompt = "phonetic spelling";
+                                            }
+                                            else{
+                                                $prompt = "$prompt AND phonetic spelling";
+                                            }
+                                        }
+                                        else{
+                                    ?>
+                                        <?=$wordDetails->phoneticSpelling?>
+                                        <a href="https://www.howtopronounce.com/german/<?=$wordDetails->german?>" target="_blank">Listen</a>
+                                    <?php
+                                        }
+                                    ?>
+                                </div>
                                 <div><?=$wordDetails->english?></div>
                                 <div>Definition <?=$wordDetails->definition?></div>
-                                <div>Gender- <?=$wordDetails->gender?></div>
-                                <div>Number- <?=$wordDetails->number?></div>
-                                <div>Parts of Speech <?=$wordDetails->partsOfSpeech?></div>
+                                <div>
+                                    <span title="Parts of Speech"><?=$wordDetails->partsOfSpeech?></span>,
+                                    <span title="Number"><?=$wordDetails->number?></span>,
+                                    <span title="Gender"><?=$wordDetails->gender?></span>
+                                </div>
                                 <div>Pronunciation <?=$wordDetails->pronunciation?></div>
-                                
                             </div>
 
                             <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
                         </div>
                     </div>
-
-                    <?php
-                        foreach ($examples as $example) {
-                            echo $example->german . ' - ' . $example->english;
-                        }
-                    ?>
-                    
+                    <ul style="list-style: disc; margin-left: 19px;">
+                        <?php
+                            foreach ($examples as $example) {
+                        ?>
+                            <li><?=$example->german?> - <?=$example->english?></li>
+                        <?php
+                            }
+                        ?>
+                    </ul>
                     <div>
                         <?php
-                            /*
-                                $translate = new TranslateClient(['key' => $apiKey ]);
-                                // Translate text from english to german.
-                                $result = $translate->translate('An_English_Word', [ 'target' => 'gr' ]);
-                                echo $result['text'] . "\n";
-                            */
+                           
 
                             
-                            $prompt = "";
-                            if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
-                                $prompt = "IPA";
-                            }
-                            else{
-                                echo 'IPA : ' .  $wordDetails->ipa; 
-                            }
-
-                            if(!isset($wordDetails->phoneticSpelling) || empty($wordDetails->phoneticSpelling)){
-                                if(empty($prompt)){
-                                    $prompt = "phonetic spelling";
-                                }
-                                else{
-                                    $prompt = "$prompt AND phonetic spelling";
-                                }
-                            }
-                            else{
-                                echo '<br>phonetic Spelling : ' .  $wordDetails->phoneticSpelling; 
-                                echo '<a href="https://www.howtopronounce.com/german/' .$wordDetails->german . '" target="_blank">Listen</a>';
-                            }
 
                             if(!empty($prompt)){
                                 $prompt .= "  of the word '". $wordDetails->german ."' in German";
@@ -192,8 +201,9 @@
                                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
                                 curl_setopt($ch, CURLOPT_URL,"https://api.us-east.text-to-speech.watson.cloud.ibm.com/instances/947980ec-a4fc-447b-a6cb-257d51b3c3ad/v1/synthesize?voice=de-DE_DieterV3Voice");
                                 curl_setopt($ch, CURLOPT_USERPWD, "apikey:$ibmKey");
-                                // curl_setopt($ch, CURLOPT_SAFE_UPLOAD, TRUE);
-                                curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"'. $germanWord .'"}');
+                                // curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"'. $germanWord .'"}'); //This statement is also fine.
+                                curl_setopt($ch, CURLOPT_POSTFIELDS,'{"text":"<p><s><prosody rate=\'-50%\'>'. $germanWord .'</prosody></s></p>"}');
+
                                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
                                 curl_setopt($ch, CURLOPT_HEADER, TRUE);
                                 curl_setopt($ch, CURLINFO_HEADER_OUT, TRUE);
@@ -224,12 +234,15 @@
                             }
                             $audioUrl = BASE_URL . "/voices/" . strtolower($wordDetails->german) . ".mp3";  //relative path (http://localhost/site-name/...)
                         ?>
+                        <button type="button" class="play-button">Play
+                            <img src="pronounce.png" alt="" srcset="">
+                            <img src="play-animation.gif" alt="" srcset="">
 
-                        
-                        <audio controls>
+                        </button>
+                        <audio controls id="myAudio" style="display: none;">
                             <source src="<?=$audioUrl?>" type="audio/mpeg">
-                            Your browser does not support the audio element.
                         </audio>
+                        
                     </div>
             </div><!-- .container -->
         </main>
@@ -246,13 +259,21 @@
         Required::jquery()->hamburgerMenu();
         ?>
         <script>
+            function aud_play_pause(elementId) {
+                var myAudio = document.getElementById(elementId);
+                if (myAudio.paused) {
+                    myAudio.play();
+                } else {
+                    myAudio.pause();
+                }
+            }
+
             var base_url = '<?php echo BASE_URL; ?>';
             $(function() {
-                // $.get('https://www.howtopronounce.com/german/ich', function(html) {
-                //     let kk = $(html).find("#pronouncedContents").html();
-                //     alert(kk);
-                // });
-
+                var playing = false;
+                $('.play-button').click(function(){
+                    aud_play_pause("myAudio");
+                });
 
                 function fades($div, cb) {
                     $div.fadeIn(300, function() {
