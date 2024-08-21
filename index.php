@@ -67,9 +67,18 @@
     }
     
     if($isLoggedin){
-        Histories::set($userId, $wordDetails->id, $db);
+        if($wordDetails){
+            Histories::set($userId, $wordDetails->id, $db);
+        }
     }
-    $examples = Examples::get(trim($wordDetails->german), $db);
+
+    if($wordDetails){
+        //
+        $examples = Examples::get(trim($wordDetails->german), $db);
+    }
+    else {
+        $examples = Examples::get(trim($_GET["word"]), $db);
+    }
 
     $parsedown = new Parsedown();
     $prompt = "";
