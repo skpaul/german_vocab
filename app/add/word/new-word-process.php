@@ -39,7 +39,7 @@
         $data["gender"] = $validable->label("Gender")->post("gender")->asInteger(true)->maxLen(11)->default(0)->validate();
         $data["partsOfSpeech"] = $validable->label("PartsOfSpeech")->post("partsOfSpeech")->asInteger(true)->maxLen(11)->default(0)->validate();
         $data["article"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(NULL)->validate();
-        $data["derivativeOf"] = $validable->label("DerivativeOf")->post("derivativeOf")->asInteger(false)->maxLen(11)->default(NULL)->validate();
+        $data["derivativeOf"] = $validable->label("DerivativeOf")->post("derivativeOf")->asString(true)->maxLen(50)->default(NULL)->validate();
     } catch (ValidationException $exp) {
         exit($json->fail()->message($exp->getMessage())->create());
     }

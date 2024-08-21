@@ -79,7 +79,7 @@
             crossorigin="anonymous"     referrerpolicy="no-referrer"         />
 
 
-        <link rel="stylesheet" href="visit.css?v=<?= time() ?>">
+        <link rel="stylesheet" href="new-word.css?v=<?= time() ?>">
     </head>
 
     <body>
@@ -113,28 +113,28 @@
                                 </div>
                                 <!-- ipa  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">ipa</label>
+                                    <label class="">ipa</label>
                                     <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" type="text" >
                                 </div>
                                 <!-- phoneticSpelling  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                <label class="required">phonetic Spelling</label>
+                                <label class="">phonetic Spelling</label>
                                 <input name="phoneticSpelling" id="phoneticSpelling" title="" class="validate" data-title="phoneticSpelling" data-datatype="string" data-required="optional" data-maxlen="100" type="text" >
                                 </div>
                                 <!-- pronunciation  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">pronunciation</label>
+                                    <label class="">pronunciation</label>
                                     <input name="pronunciation" id="pronunciation" title="" class="validate" data-title="pronunciation" data-datatype="string" data-required="optional" data-maxlen="100" type="text" >
                                 </div>
                                 <!-- definition  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">definition</label>
+                                    <label class="">definition</label>
                                     <input name="definition" id="definition" title="" class="validate" data-title="definition" data-datatype="string" data-required="optional" data-minlen="allow null" data-maxlen="255" type="text" >
                                 </div>
                                 <!-- number  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">number</label>
-                                    <select name="number" id="number" class="validate" data-datatype="integer" data-required="required">
+                                    <label class="">number</label>
+                                    <select name="number" id="number" class="validate" data-datatype="integer" data-required="optional">
                                         <option value=""></option>
                                         <?php
                                             foreach ($numbers as $ps) {
@@ -147,8 +147,8 @@
                                 </div>
                                 <!-- gender  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">gender</label>
-                                    <select name="gender" id="gender" class="validate" data-datatype="integer" data-required="required">
+                                    <label class="">gender</label>
+                                    <select name="gender" id="gender" class="validate" data-datatype="integer" data-required="optional">
                                         <option value=""></option>
                                         <?php
                                             foreach ($genders as $ps) {
@@ -161,8 +161,8 @@
                                 </div>
                                 <!-- partsOfSpeech  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">Parts of Speech</label>
-                                    <select name="partsOfSpeech" id="partsOfSpeech" class="validate" data-datatype="integer"  data-required="required">
+                                    <label class="">Parts of Speech</label>
+                                    <select name="partsOfSpeech" id="partsOfSpeech" class="validate" data-datatype="integer"  data-required="optional">
                                         <option value=""></option>
                                         <?php
                                             foreach ($partsOfSpeech as $ps) {
@@ -177,8 +177,8 @@
                               
                                 <!-- article  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">article</label>
-                                    <select name="article" id="article" class="validate" data-datatype="integer"  data-required="required">
+                                    <label class="">article</label>
+                                    <select name="article" id="article" class="validate" data-datatype="integer"  data-required="optional">
                                         <option value=""></option>
                                         <?php
                                             foreach ($articles as $ps) {
@@ -193,7 +193,7 @@
                                 <!-- derivativeOf  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">derivativeOf</label>
-                                    <input name="derivativeOf" id="derivativeOf" title="" class="validate" data-title="derivativeOf" data-datatype="integer"  data-required="optional"  type="text">
+                                    <input name="derivativeOf" id="derivativeOf" title="" class="validate" data-title="derivativeOf" data-datatype="string" data-maxlen="50"  data-required="optional"  type="text">
                                 </div>
 
                             </div>
