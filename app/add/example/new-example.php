@@ -69,15 +69,15 @@
                     <section class="mb-1.0">
                         <form id="add-new-word" class="form" action="new-example-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
                             <div class="grid fr1">
-                                <!-- english  --> 
-                                <div class="field">  
-                                    <label class="required">english</label>
-                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
-                                </div>
                                 <!-- german  --> 
                                 <div class="field">  
                                     <label class="required">german</label>
                                     <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
+                                </div>
+                                <!-- english  --> 
+                                <div class="field">  
+                                    <label class="required">english</label>
+                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
                                 </div>
                             </div>
                             <div class="flex ai-center">

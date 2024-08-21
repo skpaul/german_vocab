@@ -60,13 +60,11 @@
     #endregion
 
     if(isset($_GET["word"]) && !empty($_GET["word"])){
-
         $wordDetails = Words::findGerman(trim($_GET["word"]), $db);
     }
     else{
         $wordDetails = Words::selectRandomly($db);
     }
-
     
     if($isLoggedin){
         Histories::set($userId, $wordDetails->id, $db);
@@ -104,7 +102,7 @@
                     <div class="ba bc bg-1">
                         <div class="container-700 mv-1.5">
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
-                                <div><?=$wordDetails->german?></div>
+                                <div class="fs-150%"><?=$wordDetails->german?></div>
                                 <div>
                                     <?php
                                         if(!isset($wordDetails->ipa) || empty($wordDetails->ipa)){
@@ -151,8 +149,23 @@
                     <ul style="list-style: disc; margin-left: 19px;">
                         <?php
                             foreach ($examples as $example) {
+                                $arrWords = explode(" ", trim($example->german));
+                               
                         ?>
-                            <li><?=$example->german?> - <?=$example->english?></li>
+                            <li>
+                                <?php
+                                    foreach ($arrWords as $word) {
+                                        if($isLoggedin) $queryString = "session=" . $encSessionId . "&word=" . $word;
+                                        else $queryString = "word=" . $word;
+                                        
+                                ?>
+                                    <a href="<?=BASE_URL?>/index.php?<?=$queryString?>"><?=$word?></a> 
+                                <?php
+                                    }
+                                ?>
+                                 - 
+                                <?=$example->english?>
+                            </li>
                         <?php
                             }
                         ?>

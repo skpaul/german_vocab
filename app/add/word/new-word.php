@@ -101,15 +101,15 @@
                     <section class="mb-1.0">
                         <form id="add-new-word" class="form" action="new-word-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
                             <div class="grid">
-                                <!-- english  --> 
-                                <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">english</label>
-                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-minlen="allow null" data-maxlen="30" type="text" >
-                                </div>
                                 <!-- german  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">german</label>
                                     <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-minlen="" data-maxlen="50" type="text" >
+                                </div>
+                                <!-- english  --> 
+                                <div class="field fr6-lg fr12-sm">  
+                                    <label class="required">english</label>
+                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-minlen="allow null" data-maxlen="30" type="text" >
                                 </div>
                                 <!-- ipa  --> 
                                 <div class="field fr6-lg fr12-sm">  
