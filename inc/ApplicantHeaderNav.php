@@ -41,8 +41,9 @@ class ApplicantHeaderNav
                 <div class="main-top-nav-container">
                     <!-- <div class="container"> -->
                         <nav id="mainTopNav" class="main-top-nav">
-                            <a href="$baseUrl/app/visits/visit.php{$session}"><span class="m-icons mr-0.2">home</span><span>Institute</span></a>                           
-                            <a href="$baseUrl/app/search/list.php{$session}"><span class="m-icons mr-0.2">search</span><span>Search</span></a>                           
+                            <a href="$baseUrl/app/add/word/new-word.php{$session}"><span class="m-icons mr-0.2">home</span><span>Add Word</span></a>                           
+                            <a href="$baseUrl/app/add/example/new-example.php{$session}"><span class="m-icons mr-0.2">home</span><span>Add Example</span></a>                           
+                                                    
                             {$loginHtml}
                         </nav> 
                     <!-- </div> -->
