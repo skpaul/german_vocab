@@ -36,10 +36,7 @@
             }
         }
     #endregion
-
-    $payload = $_GET["payload"];
-    if($payload == "basic"){
-        $wordDetails = $db->fetchAssoc("SELECT id, german, english FROM words ORDER BY RAND() LIMIT 1");
-        exit($json->success(true)->data($wordDetails)->create());
-    }
+    $german = $_G
+    $examples = Examples::get($german, $db);
+    exit($json->success(true)->data($examples)->create());
 ?>

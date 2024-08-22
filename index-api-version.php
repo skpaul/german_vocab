@@ -70,7 +70,7 @@
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                                 <div class="fs-150%">
                                     <form id="frm-word" action="<?=BASE_URL?>/api/get-rand-word.php?<?=$queryString?>" method="get">
-                                        <input type="text" name="current-word" id="current-word">
+                                        <input type="text" name="german" id="german">
                                         <button class="btn" type="submit">Search</button>
                                     </form>
                                     <button class="button" type="button" id="next-word">Next</button>
@@ -81,7 +81,7 @@
                                 <div>
                                     phonetic spelling
                                 </div>
-                                <div>English meaning</div>
+                                <div><input type="text" name="english" id="english"></div>
                                 <div>Definition</div>
                                 <div>
                                     <span title="Parts of Speech"></span>,
@@ -129,10 +129,11 @@
 
            
             $(function() {
-                
-                var txtCurrentWord = $('#current-word');
-                var currentWord = txtCurrentWord.val();
-                if(currentWord.length == 0){
+                var txtGerman = $('#german');
+                var txtEnglish = $('#english');
+
+                var germanWord = txtGerman.val();
+                if(germanWord.length == 0){
                    getRandomWord();
                 }
 
@@ -146,10 +147,14 @@
                 $('form#frm-word').formstar();
 
                 function getRandomWord() {
-                    $.get(baseUrl + '/api/get-random-word.php', {"payload":"basic"}, function(response, textStatus, jqXHR) {
+                    $.get(baseUrl + '/api/get-random-word.php?session=' + encSessionId, {"payload":"basic"}, function(response, textStatus, jqXHR) {
                         let data = response.data;
-                        txtCurrentWord.val(data.german);
-                        setHistory(data.id, encSessionId);
+                        txtGerman.val(data.german);
+                        txtEnglish.val(data.english);
+                        getExamples(data.german);
+                        if(encSessionId.length > 0){
+                            setHistory(data.id);
+                        }
                     });
                 }
 
@@ -157,8 +162,13 @@
                     
                 }
 
-                function setHistory(wordId, sessionId) {
-                    $.post(baseUrl + '/api/set-history.php?session=' + sessionId, {wordId:wordId}, function(response, textStatus, jqXHR) {
+                function setHistory(wordId) {
+                    $.post(baseUrl + '/api/set-history.php?session=' + encSessionId, {wordId:wordId});
+                }
+
+                function getExamples(german) {
+                    $.get(baseUrl + '/api/get-examples.php?session=' + encSessionId, {"german":german}, function(response, textStatus, jqXHR) {
+                        let data = response.data;
                         console.log(response);
                     });
                 }
