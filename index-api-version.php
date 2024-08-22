@@ -71,8 +71,9 @@
                                 <div class="fs-150%">
                                     <form id="frm-word" action="<?=BASE_URL?>/api/get-rand-word.php?<?=$queryString?>" method="get">
                                         <input type="text" name="current-word" id="current-word">
-                                        <button type="submit">Submit</button>
+                                        <button class="btn" type="submit">Search</button>
                                     </form>
+                                    <button class="button" type="button" id="next-word">Next</button>
                                 </div>
                                 <div>
                                    IPA
@@ -115,7 +116,7 @@
         ?>
         <script>
             var encSessionId = '<?=$encSessionId?>';
-            var base_url = '<?=BASE_URL?>';
+            var baseUrl = '<?=BASE_URL?>';
 
             function aud_play_pause(elementId) {
                 var myAudio = document.getElementById(elementId);
@@ -128,10 +129,39 @@
 
            
             $(function() {
+                
+                var txtCurrentWord = $('#current-word');
+                var currentWord = txtCurrentWord.val();
+                if(currentWord.length == 0){
+                   getRandomWord();
+                }
 
-                    // FormStar --->
+                $('#next-word').click(function(e){
+                    e.preventDefault();
+                    getRandomWord();
+                });
+
+                
+                // FormStar --->
                 $('form#frm-word').formstar();
 
+                function getRandomWord() {
+                    $.get(baseUrl + '/api/get-random-word.php', {"payload":"basic"}, function(response, textStatus, jqXHR) {
+                        let data = response.data;
+                        txtCurrentWord.val(data.german);
+                        setHistory(data.id, encSessionId);
+                    });
+                }
+
+                function search(params) {
+                    
+                }
+
+                function setHistory(wordId, sessionId) {
+                    $.post(baseUrl + '/api/set-history.php?session=' + sessionId, {wordId:wordId}, function(response, textStatus, jqXHR) {
+                        console.log(response);
+                    });
+                }
 
                 var playing = false;
                 $('.play-button').click(function(){

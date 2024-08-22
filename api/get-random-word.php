@@ -1,15 +1,12 @@
 <?php
     declare(strict_types=1);
-
-    require_once("Required.php");
-    require_once("vendor/autoload.php");
+    require_once("../Required.php");
 
     #region Library instance declaration & initialization
         $logger = new Logger(ROOT_DIRECTORY);
         $crypto = new Cryptographer(SECRET_KEY);
-        $clock = new Clock();
         $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
-        $validable = new DataValidator();
+        $json = new JSON();
     #endregion
 
     #region Session
@@ -30,6 +27,7 @@
                 $session->continue((int)$sessionId);
                 $userId = $session->getData("userId");
                 $isLoggedin = true;
+                $json = new JSON();
             } catch (\SessionException $th) {
                 HttpHeader::redirect(BASE_URL . "/sorry.php?msg=Invalid session.");
             } catch (ValidationException $exp) {
@@ -38,26 +36,14 @@
         }
     #endregion
 
-    if(isset($_GET["word"]) && !empty($_GET["word"])){
-        $wordDetails = Words::findGerman(trim($_GET["word"]), $db);
-    }
-    else{
-        $wordDetails = Words::selectRandomly($db);
-    }
-    
-    if($isLoggedin){
-        if($wordDetails){
-            Histories::set($userId, $wordDetails->id, $db);
-        }
+    $payload = $_GET["payload"];
+    if($payload == "basic"){
+        $wordDetails = $db->fetchAssoc("SELECT id, german, english FROM words ORDER BY RAND() LIMIT 1");
+        exit($json->success(true)->data($wordDetails)->create());
     }
 
-    if($wordDetails){
-        //
-        $examples = Examples::get(trim($wordDetails->german), $db);
-    }
-    else {
-        $examples = Examples::get(trim($_GET["word"]), $db);
-    }
+   
+
 
 
 ?>
