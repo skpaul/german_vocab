@@ -43,7 +43,7 @@
     $id = $_GET["id"]; //word to search
     $parameters["term"] = $term;
     $parameters["id"] = $id;
-    $sql = "SELECT $languageColumn, GROUP_CONCAT(english SEPARATOR ', ') AS otherMeaning FROM words WHERE $languageColumn = :term AND id<>:id GROUP BY $languageColumn  ORDER BY RAND() LIMIT 5";
+    $sql = "SELECT $languageColumn, GROUP_CONCAT(english SEPARATOR ', ') AS otherMeanings FROM words WHERE $languageColumn = :term AND id<>:id GROUP BY $languageColumn  ORDER BY RAND() LIMIT 5";
 
     $result = $db->fetchAssoc($sql, $parameters);
     exit($json->success(true)->data($result)->create());

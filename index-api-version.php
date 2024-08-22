@@ -115,7 +115,13 @@
                        other meanings
                     </div>
                     <div>
-                                               
+                        <button type="button" class="play-button">Play
+                            <img src="pronounce.png" alt="" srcset="">
+                            <img src="play-animation.gif" alt="" srcset="">
+                        </button>
+                        <audio controls id="myAudio" style="display: none;" autoplay="">
+                            <source id="voice-source" src="" type="audio/mpeg">
+                        </audio>
                     </div>
             </div><!-- .container -->
         </main>
@@ -172,9 +178,11 @@
                         txtEnglish.val(data.english);
                         getWordDetails(data.id);
                         getExamples(data.german);
+                        getOtherMeanings(data.german, data.id);
                         if(encSessionId.length > 0){
                             setHistory(data.id);
                         }
+                        // getVoice(data.german);
                     });
                 }
 
@@ -193,14 +201,14 @@
                             setHistory(data.id);
                         }
 
-                        getOtherMeanings(germanWord, data.id);
+                        getOtherMeanings(data.german, data.id);
+                        // getVoice(data.german);
                     });
                 }
 
                 function getWordDetails(id) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"maximum", id:id}, function(response, textStatus, jqXHR) {
                         let data = response.data;
-                        console.log(data);
                         $("#ipa").text(data.ipa);
                         $("#phoneticSpelling").text(data.phoneticSpelling);
                         $("#definition").text(data.definition);
@@ -240,17 +248,32 @@
 
                 function getOtherMeanings(baseWord, id) {
                     $.get(baseUrl + '/api/get-other-meanings.php?session=' + encSessionId, {term:baseWord, id:id, lang:"german"}, function(response, textStatus, jqXHR) {
-                        let otherMeanings = response.data.otherMeaning;
-                        console.log(response.data);
                         let div = $("div#other-meanings");
                         div.empty();
-                        div.append(otherMeanings);
+                        div.append(response.data.otherMeanings);
+                    });
+                }
+
+                function getVoice(word) {
+                    $.get(baseUrl + '/api/get-voice.php?session=' + encSessionId, {word:word}, function(response, textStatus, jqXHR) {
+                        //myAudio
+                        var audio = $("#myAudio");
+                        let source = $("#voice-source");
+                        source.attr("src", response.data);
+
+                        audio[0].pause();
+                        audio[0].load();//suspends and restores all audio element
+
+                        //audio[0].play(); changed based on Sprachprofi's comment below
+                        audio[0].oncanplaythrough = audio[0].play();
+                        // aud_play_pause("myAudio");
                     });
                 }
 
                 var playing = false;
                 $('.play-button').click(function(){
-                    aud_play_pause("myAudio");
+                    getVoice(txtGerman.val());
+                    // aud_play_pause("myAudio");
                 });
 
                 function fades($div, cb) {
