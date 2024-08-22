@@ -50,6 +50,14 @@
             Required::gtag()->html5shiv()->metaTags()->favicon()->sweetModalCSS()->omnicss();
         ?>
 
+        <style>
+            ul#examples .de{
+                font-size: 12px;
+            }
+            ul#examples .en{
+                font-size: 9px;
+            }
+        </style>
     </head>
 
     <body>
@@ -94,7 +102,7 @@
                             <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
                         </div>
                     </div>
-                    <ul style="list-style: disc; margin-left: 19px;">
+                    <ul id="examples" style="list-style: disc; margin-left: 19px;">
                        examples
                     </ul>
                     <div>
@@ -168,8 +176,23 @@
 
                 function getExamples(german) {
                     $.get(baseUrl + '/api/get-examples.php?session=' + encSessionId, {"german":german}, function(response, textStatus, jqXHR) {
-                        let data = response.data;
-                        console.log(response);
+                        let examples = response.data;
+                        let ul = $("ul#examples");
+                        ul.empty();
+                        let url = baseUrl + '/index-api-version.php?session=' + encSessionId + '&word=';
+                        $.each(examples, function(index, example){
+                            let li = "<li>";
+                            let arrGermanWords = example.german.split(" ");
+                            let strGermanWords = "";
+                            arrGermanWords.forEach(function(germanWord){
+                                let a = ' <a href="'+ url + germanWord + '">'+ germanWord +'</a>';
+                                strGermanWords += a;
+                            });
+                           
+                            let fullSentence = '<span class="de">' + strGermanWords + '</span> - <span class="en"> '+ example.english +' </span>';  
+                          
+                            $('<li />', {html: fullSentence}).appendTo(ul);
+                        });
                     });
                 }
 

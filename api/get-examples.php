@@ -36,7 +36,7 @@
             }
         }
     #endregion
-    $german = $_G
+    $german = $_GET["german"];
     $examples = Examples::get($german, $db);
     exit($json->success(true)->data($examples)->create());
 ?>
