@@ -39,6 +39,11 @@
         }
     #endregion
 
+    $word = "";
+    if(isset($_GET["word"]) && !empty($_GET["word"])){
+        $word = trim($_GET["word"]);
+    }
+
 ?>
 
 <!DOCTYPE html>
@@ -53,6 +58,9 @@
         <style>
             ul#examples .de{
                 font-size: 12px;
+            }
+            ul#examples a{
+                border-bottom: 1px dashed red;
             }
             ul#examples .en{
                 font-size: 9px;
@@ -77,10 +85,10 @@
                         <div class="container-700 mv-1.5">
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                                 <div class="fs-150%">
-                                    <form id="frm-word" action="<?=BASE_URL?>/api/get-rand-word.php?<?=$queryString?>" method="get">
-                                        <input type="text" name="german" id="german">
-                                        <button class="btn" type="submit">Search</button>
-                                    </form>
+                                   
+                                        <input type="text" name="german" id="german" value="<?=$word?>">
+                                        <button class="btn" type="button" id="search">Search</button>
+                                   
                                     <button class="button" type="button" id="next-word">Next</button>
                                 </div>
                                 <div>
@@ -144,6 +152,9 @@
                 if(germanWord.length == 0){
                    getRandomWord();
                 }
+                else{
+                    searchWord(germanWord);
+                }
 
                 $('#next-word').click(function(e){
                     e.preventDefault();
@@ -166,8 +177,20 @@
                     });
                 }
 
-                function search(params) {
-                    
+                $('button#search').click(function(e){
+                    germanWord = txtGerman.val();
+                    searchWord(germanWord);
+                });
+
+                function searchWord(germanWord) {
+                    $.get(baseUrl + '/api/search-word.php?session=' + encSessionId, {lang:"de", word:germanWord}, function(response, textStatus, jqXHR) {
+                        let data = response.data;
+                        txtEnglish.val(data.english);
+                        getExamples(germanWord);
+                        if(encSessionId.length > 0){
+                            setHistory(data.id);
+                        }
+                    });
                 }
 
                 function setHistory(wordId) {
