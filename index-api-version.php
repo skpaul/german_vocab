@@ -92,11 +92,10 @@
                                     <button class="button" type="button" id="next-word">Next</button>
                                 </div>
                                 <div>
-                                   IPA
+                                   <span id="ipa"></span>
+                                   <span id="phoneticSpelling"></span>
                                 </div>
-                                <div>
-                                    phonetic spelling
-                                </div>
+
                                 <div><input type="text" name="english" id="english"></div>
                                 <div>Definition</div>
                                 <div>
@@ -160,16 +159,16 @@
                     e.preventDefault();
                     getRandomWord();
                 });
-
                 
                 // FormStar --->
                 $('form#frm-word').formstar();
 
                 function getRandomWord() {
-                    $.get(baseUrl + '/api/get-random-word.php?session=' + encSessionId, {"payload":"basic"}, function(response, textStatus, jqXHR) {
+                    $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"random", feature:"basic"}, function(response, textStatus, jqXHR) {
                         let data = response.data;
                         txtGerman.val(data.german);
                         txtEnglish.val(data.english);
+                        getWordDetails(data.id);
                         getExamples(data.german);
                         if(encSessionId.length > 0){
                             setHistory(data.id);
@@ -183,13 +182,21 @@
                 });
 
                 function searchWord(germanWord) {
-                    $.get(baseUrl + '/api/search-word.php?session=' + encSessionId, {lang:"de", word:germanWord}, function(response, textStatus, jqXHR) {
+                    $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"basic", term:germanWord}, function(response, textStatus, jqXHR) {
                         let data = response.data;
                         txtEnglish.val(data.english);
+                        getWordDetails(data.id);
                         getExamples(germanWord);
                         if(encSessionId.length > 0){
                             setHistory(data.id);
                         }
+                    });
+                }
+
+                function getWordDetails(id) {
+                    $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"maximum", id:id}, function(response, textStatus, jqXHR) {
+                        let data = response.data;
+                        
                     });
                 }
 

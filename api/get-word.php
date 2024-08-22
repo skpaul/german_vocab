@@ -37,9 +37,42 @@
         }
     #endregion
 
-    $payload = $_GET["payload"];
-    if($payload == "basic"){
-        $wordDetails = $db->fetchAssoc("SELECT id, german, english FROM words ORDER BY RAND() LIMIT 1");
-        exit($json->success(true)->data($wordDetails)->create());
+    
+    $languageColumn = $_GET["lang"]; //german/english
+    $scope = $_GET["scope"]; //find/random
+    $feature = $_GET["feature"]; //basic, maximum
+    // $source = $_GET["source"]; //words, histories, bookmars
+        
+    if($feature == "basic"){
+        $columns = "id, german, english";
+        $from = "words";
     }
+
+    if($feature == "maximum"){
+        $columns = "id, english, german, ipa, phoneticSpelling, pronunciation, `definition`, genderName, numberName, partOfSpeechName, articleName, createdOn, updatedOn";
+        $from = "words INNER JOIN genders ON words.genderId = genders.genderId INNER JOIN numbers ON words.numberId = numbers.numberId INNER JOIN parts_of_speech ON words.partOfSpeechId = parts_of_speech.partOfSpeechId
+        INNER JOIN articles ON words.articleId = articles.articleId";
+    }
+
+    $parameters = array() ;
+    if($scope == "find"){
+        if(isset($_GET["id"]) && !empty($_GET["id"])){
+            $id = $_GET["id"]; //wordId to search
+            $parameters["id"] = $id;
+            $sql = "SELECT $columns FROM $from WHERE id = :id";
+        }
+        else{
+            $term = $_GET["term"]; //word to search
+            $parameters["term"] = $term;
+            $sql = "SELECT $columns FROM $from WHERE $languageColumn = :term ORDER BY RAND() LIMIT 1";
+        }
+    }
+
+    if($scope == "random"){
+        $sql = "SELECT $columns FROM $from ORDER BY RAND() LIMIT 1";
+    }
+
+    $result = $db->fetchAssoc($sql, $parameters);
+    exit($json->success(true)->data($result)->create());
+    
 ?>
