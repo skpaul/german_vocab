@@ -97,21 +97,23 @@
                                 </div>
 
                                 <div><input type="text" name="english" id="english"></div>
-                                <div>Definition</div>
+                                <div id="definition">Definition</div>
                                 <div>
-                                    <span title="Parts of Speech"></span>,
-                                    <span title="Number"></span>,
-                                    <span title="Gender"></span>
+                                    <span id="partOfSpeech" title="Part of Speech"></span>,
+                                    <span id="number" title="Number"></span>,
+                                    <span id="gender" title="Gender"></span>
+                                    <span id="article" title="Gender"></span>
                                 </div>
-                                <div>Pronunciation</div>
+                                <div id="pronunciation">Pronunciation</div>
                             </div>
-
-                            <a href="<?=BASE_URL?>/?session=<?=$encSessionId?>">Next</a>
                         </div>
                     </div>
                     <ul id="examples" style="list-style: disc; margin-left: 19px;">
                        examples
                     </ul>
+                    <div id="other-meanings">
+                       other meanings
+                    </div>
                     <div>
                                                
                     </div>
@@ -190,13 +192,23 @@
                         if(encSessionId.length > 0){
                             setHistory(data.id);
                         }
+
+                        getOtherMeanings(germanWord, data.id);
                     });
                 }
 
                 function getWordDetails(id) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"maximum", id:id}, function(response, textStatus, jqXHR) {
                         let data = response.data;
-                        
+                        console.log(data);
+                        $("#ipa").text(data.ipa);
+                        $("#phoneticSpelling").text(data.phoneticSpelling);
+                        $("#definition").text(data.definition);
+                        $("#pronunciation").text(data.pronunciation);
+                        $("#numberName").text(data.numberName);
+                        $("#genderName").text(data.genderName);
+                        $("#partOfSpeechName").text(data.partOfSpeechName);
+                        $("#articleName").text(data.articleName);
                     });
                 }
 
@@ -223,6 +235,16 @@
                           
                             $('<li />', {html: fullSentence}).appendTo(ul);
                         });
+                    });
+                }
+
+                function getOtherMeanings(baseWord, id) {
+                    $.get(baseUrl + '/api/get-other-meanings.php?session=' + encSessionId, {term:baseWord, id:id, lang:"german"}, function(response, textStatus, jqXHR) {
+                        let otherMeanings = response.data.otherMeaning;
+                        console.log(response.data);
+                        let div = $("div#other-meanings");
+                        div.empty();
+                        div.append(otherMeanings);
                     });
                 }
 
