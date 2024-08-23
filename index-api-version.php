@@ -56,15 +56,31 @@
         ?>
 
         <style>
+            input#german{
+                background-color: transparent;
+                border-color: transparent;
+                font-size: 3rem;
+                height: unset !important;
+                line-height: 1;
+                padding: 5px 10px;
+                border-radius: 9px;
+                margin-bottom: 18px;
+            }
+
+            ul#examples li{
+                line-height: 1.7;
+            }
             ul#examples .de{
-                font-size: 12px;
+                /* font-size: 14px; */
             }
             ul#examples a{
-                border-bottom: 1px dashed red;
+                border-bottom: 1px dashed #C2D0E5;
             }
             ul#examples .en{
-                font-size: 9px;
+                font-size: 90%;
             }
+
+
         </style>
     </head>
 
@@ -93,17 +109,17 @@
                                     <a id="go-to-edit" href="">Edit</a>
                                 </div>
                                 <div>
-                                   <span id="ipa"></span>
-                                   <span id="phoneticSpelling"></span>
+                                   <span id="ipa" title="International Phonetic Alphabet"></span>
+                                   <span id="phoneticSpelling" title="Phonetic Spelling"></span>
                                 </div>
 
                                 <div><input type="text" name="english" id="english"></div>
-                                <div id="definition">Definition</div>
+                                <div id="definition" title="Definition">Definition</div>
                                 <div>
-                                    <span id="partOfSpeech" title="Part of Speech"></span>,
-                                    <span id="number" title="Number"></span>,
+                                    <span id="partOfSpeech" title="Part of Speech"></span>
+                                    <span id="number" title="Number"></span>
                                     <span id="gender" title="Gender"></span>
-                                    <span id="article" title="Gender"></span>
+                                    <span id="article" title="Article"></span>
                                 </div>
                                 <div id="pronunciation">Pronunciation</div>
                             </div>
@@ -115,6 +131,10 @@
                     <div id="other-meanings">
                        other meanings
                     </div>
+                    <div id="derivatives">
+                        derivatives
+                    </div>
+                    
                     <div>
                         <button type="button" class="play-button">Play
                             <img src="pronounce.png" alt="" srcset="">
@@ -150,7 +170,6 @@
                     myAudio.pause();
                 }
             }
-
            
             $(function() {
                 var txtGerman = $('#german');
@@ -168,7 +187,6 @@
                     e.preventDefault();
                     getRandomWord();
                 });
-                
 
 
                 function getRandomWord() {
@@ -182,6 +200,7 @@
                         if(encSessionId.length > 0){
                             setHistory(data.id);
                         }
+                        getDerivatives(data.id);
                         // getVoice(data.german);
                     });
                 }
@@ -194,6 +213,23 @@
                 function searchWord(germanWord) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"basic", term:germanWord}, function(response, textStatus, jqXHR) {
                         let data = response.data;
+                        if(data === false){
+                            txtEnglish.val("");
+                            $("#ipa").text("");
+                            $("#phoneticSpelling").text("");
+                            $("#definition").text("");
+                            $("#pronunciation").text("");
+                            $("#number").text("");
+                            $("#gender").text("");
+                            $("#partOfSpeech").text("");
+                            $("#articleName").text("");
+                            $("#go-to-edit").hide().attr('href', "");
+                            $("ul#examples").empty();
+                            $("div#other-meanings").empty();
+                            $("div#derivatives").empty();
+                            alert("Not found."); 
+                            return;
+                        }
                         txtEnglish.val(data.english);
                         getWordDetails(data.id);
                         getExamples(germanWord);
@@ -202,6 +238,7 @@
                         }
 
                         getOtherMeanings(data.german, data.id);
+                        getDerivatives(data.id);
                         // getVoice(data.german);
                     });
                 }
@@ -213,12 +250,12 @@
                         $("#phoneticSpelling").text(data.phoneticSpelling);
                         $("#definition").text(data.definition);
                         $("#pronunciation").text(data.pronunciation);
-                        $("#numberName").text(data.numberName);
-                        $("#genderName").text(data.genderName);
-                        $("#partOfSpeechName").text(data.partOfSpeechName);
-                        $("#articleName").text(data.articleName);
+                        $("#number").text(data.numberName);
+                        $("#gender").text(data.genderName);
+                        $("#partOfSpeech").text(data.partOfSpeechName);
+                        $("#article").text(data.articleName);
                         $editUrl = baseUrl + '/app/edit/word/edit-word.php?session=' + encSessionId + '&id=' + id;
-                        $("#go-to-edit").attr('href', $editUrl);
+                        $("#go-to-edit").show().attr('href', $editUrl);
 
                     });
                 }
@@ -238,8 +275,7 @@
                             let arrGermanWords = example.german.split(" ");
                             let strGermanWords = "";
                             arrGermanWords.forEach(function(germanWord){
-                                let a = ' <a href="'+ url + germanWord + '">'+ germanWord +'</a>';
-                                strGermanWords += a;
+                                strGermanWords += ' <a href="'+ url + germanWord + '">'+ germanWord +'</a>';
                             });
                            
                             let fullSentence = '<span class="de">' + strGermanWords + '</span> - <span class="en"> '+ example.english +' </span>';  
@@ -256,6 +292,19 @@
                         div.append(response.data.otherMeanings);
                     });
                 }
+
+                function getDerivatives(id) {
+                    $.get(baseUrl + '/api/get-derivatives.php?session=' + encSessionId, {id:id}, function(response, textStatus, jqXHR) {
+                        let content = "";  
+                        let url = baseUrl + '/index-api-version.php?session=' + encSessionId + '&word=';
+                        $.each(response.data, function(index, derivative){
+                            content  += ' <a href="'+ url + derivative.german + '">'+ derivative.german +'</a>';
+                        });
+                        $("div#derivatives").empty().append(content);
+                    });
+                }
+
+
 
                 function getVoice(word) {
                     $.get(baseUrl + '/api/get-voice.php?session=' + encSessionId, {word:word}, function(response, textStatus, jqXHR) {

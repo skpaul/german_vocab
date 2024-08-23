@@ -24,7 +24,7 @@
         }
     #endregion
 
-    $sql = "SELECT userId FROM users WHERE loginName = :loginName AND loginPassword=:loginPassword";
+    $sql = "SELECT userId FROM users WHERE loginName = :loginName AND loginPassword=:loginPassword AND isActive=1";
     $user = $db->fetchObject($sql, array("loginName"=> $loginName, "loginPassword"=>$loginPassword));
 
     if(!$user){
@@ -40,7 +40,7 @@
 
     $session->setData("userId", $user->userId);
 
-    $redirectUrl = BASE_URL . "/app/visits/visit.php?session=" . $encSessionId;
+    $redirectUrl = BASE_URL . "/index-api-version.php?session=" . $encSessionId;
     exit($json->success()->redirecturl($redirectUrl)->create());
 
 ?>
