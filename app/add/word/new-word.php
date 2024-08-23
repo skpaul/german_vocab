@@ -33,10 +33,10 @@
     #endregion
 
 
-    $articles = $db->fetchObjects("SELECT id, `name` FROM articles");
-    $genders = $db->fetchObjects("SELECT id, `name` FROM genders");
-    $numbers = $db->fetchObjects("SELECT id, `name` FROM numbers");
-    $partsOfSpeech = $db->fetchObjects("SELECT id, `name` FROM parts_of_speech");
+    $articles = $db->fetchObjects("SELECT articleId AS id, articleName AS `name` FROM articles");
+    $genders = $db->fetchObjects("SELECT genderId AS id, genderName AS `name` FROM genders");
+    $numbers = $db->fetchObjects("SELECT numberId AS id, numberName AS `name` FROM numbers");
+    $partsOfSpeech = $db->fetchObjects("SELECT partOfSpeechId AS id, partOfSpeechName AS `name` FROM parts_of_speech");
     
 ?>
 

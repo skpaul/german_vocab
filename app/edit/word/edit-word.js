@@ -23,7 +23,7 @@ $(function(){
         // ],
       });
 
-    $('form#add-new-word').formstar();
+    $('form#add-new-word').formstar({reset:false});
 
 
     // Show the .addDate modal

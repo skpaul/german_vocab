@@ -81,7 +81,7 @@
             crossorigin="anonymous"     referrerpolicy="no-referrer"         />
 
 
-        <link rel="stylesheet" href="new-word.css?v=<?= time() ?>">
+        <link rel="stylesheet" href="edit-word.css?v=<?= time() ?>">
     </head>
 
     <body>
@@ -101,37 +101,37 @@
                     <div class="fs-130% c-gray-2 fw-700 mb-1.5"><?= $pageTitle ?></div>
 
                     <section class="mb-1.0">
-                        <form id="add-new-word" class="form" action="new-word-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
+                        <form id="add-new-word" class="form" action="edit-word-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
                             <div class="grid">
                                 <!-- german  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">german</label>
-                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-minlen="" data-maxlen="50" type="text" value="<?=$word->german?>" > 
+                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-minlen="" data-maxlen="50" type="text" value="<?=htmlspecialchars($word->german)?>" > 
                                 </div>
                                 <!-- english  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">english</label>
-                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-minlen="allow null" data-maxlen="30" type="text" value="<?=$word->english?>" >
+                                    <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-minlen="allow null" data-maxlen="30" type="text" value="<?=htmlspecialchars($word->english)?>" >
                                 </div>
                                 <!-- ipa  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="">ipa</label>
-                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" type="text" value="<?=$word->ipa?>" >
+                                    <label class="">IPA</label>
+                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" type="text" value="<?=htmlspecialchars($word->ipa ?? '')?>" >
                                 </div>
                                 <!-- phoneticSpelling  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                <label class="">phonetic Spelling</label>
-                                <input name="phoneticSpelling" id="phoneticSpelling" title="" class="validate" data-title="phoneticSpelling" data-datatype="string" data-required="optional" data-maxlen="100" type="text" >
+                                    <label class="">Phonetic Spelling</label>
+                                    <input name="phoneticSpelling" id="phoneticSpelling" title="" class="validate" data-title="phoneticSpelling" data-datatype="string" data-required="optional" data-maxlen="100" type="text" value="<?=htmlspecialchars($word->phoneticSpelling ?? '')?>">
                                 </div>
                                 <!-- pronunciation  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="">pronunciation</label>
-                                    <input name="pronunciation" id="pronunciation" title="" class="validate" data-title="pronunciation" data-datatype="string" data-required="optional" data-maxlen="100" type="text" >
+                                    <label class="">Pronunciation</label>
+                                    <input name="pronunciation" id="pronunciation" title="" class="validate" data-title="pronunciation" data-datatype="string" data-required="optional" data-maxlen="100" type="text" value="<?=htmlspecialchars($word->pronunciation ?? '') ?>" >
                                 </div>
                                 <!-- definition  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="">definition</label>
-                                    <input name="definition" id="definition" title="" class="validate" data-title="definition" data-datatype="string" data-required="optional" data-minlen="allow null" data-maxlen="255" type="text" >
+                                    <label class="">Definition</label>
+                                    <input name="definition" id="definition" title="" class="validate" data-title="definition" data-datatype="string" data-required="optional" data-minlen="allow null" data-maxlen="255" type="text" value="<?=htmlspecialchars($word->definition ?? '') ?>">
                                 </div>
                                 <!-- number  --> 
                                 <div class="field fr6-lg fr12-sm">  
@@ -140,8 +140,9 @@
                                         <option value=""></option>
                                         <?php
                                             foreach ($numbers as $ps) {
+                                                if($ps->id == $word->numberId) $selected="selected"; else $selected="";
                                         ?>
-                                            <option value="<?=$ps->id?>"><?=$ps->name?></option>
+                                            <option value="<?=$ps->id?>" <?=$selected?>><?=$ps->name?></option>
                                         <?php
                                             }
                                         ?>
@@ -154,8 +155,9 @@
                                         <option value=""></option>
                                         <?php
                                             foreach ($genders as $ps) {
+                                                if($ps->id == $word->genderId) $selected="selected"; else $selected="";
                                         ?>
-                                            <option value="<?=$ps->id?>"><?=$ps->name?></option>
+                                            <option value="<?=$ps->id?>" <?=$selected?>><?=$ps->name?></option>
                                         <?php
                                             }
                                         ?>
@@ -168,8 +170,9 @@
                                         <option value=""></option>
                                         <?php
                                             foreach ($partsOfSpeech as $ps) {
+                                                if($ps->id == $word->partOfSpeechId) $selected="selected"; else $selected="";
                                         ?>
-                                            <option value="<?=$ps->id?>"><?=$ps->name?></option>
+                                            <option value="<?=$ps->id?>" <?=$selected?>><?=$ps->name?></option>
                                         <?php
                                             }
                                         ?>
@@ -184,8 +187,9 @@
                                         <option value=""></option>
                                         <?php
                                             foreach ($articles as $ps) {
+                                                if($ps->id == $word->articleId) $selected="selected"; else $selected="";
                                         ?>
-                                            <option value="<?=$ps->id?>"><?=$ps->name?></option>
+                                            <option value="<?=$ps->id?>" <?=$selected?>><?=$ps->name?></option>
                                         <?php
                                             }
                                         ?>
@@ -195,11 +199,12 @@
                                 <!-- derivativeOf  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">derivativeOf</label>
-                                    <input name="derivativeOf" id="derivativeOf" title="" class="validate" data-title="derivativeOf" data-datatype="string" data-maxlen="50"  data-required="optional"  type="text">
+                                    <input name="derivativeOf" id="derivativeOf" title="" class="validate" data-title="derivativeOf" data-datatype="string" data-maxlen="50"  data-required="optional" type="text" value="<?=htmlspecialchars($word->derivativeOf ?? '')?>">
                                 </div>
 
                             </div>
                             <div class="flex ai-center">
+                                <input type="hidden" name="id" value="<?=$id?>">
                                 <input type="hidden" name="submitted" value="1">   
                                 <div class="relative">
 
@@ -405,6 +410,6 @@
             referrerpolicy="no-referrer"
             ></script>
 
-        <script src="new-word.js?v=<?= time() ?>"></script>
+        <script src="edit-word.js?v=<?= time() ?>"></script>
     </body>
 </html>

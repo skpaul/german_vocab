@@ -35,10 +35,10 @@
         $data["phoneticSpelling"] = $validable->label("PhoneticSpelling")->post("phoneticSpelling")->asString(true)->maxLen(100)->validate();
         $data["pronunciation"] = $validable->label("Pronunciation")->post("pronunciation")->asString(true)->maxLen(100)->default(NULL)->validate();
         $data["definition"] = $validable->label("Definition")->post("definition")->asString(true)->maxLen(255)->default(NULL)->validate();
-        $data["number"] = $validable->label("Number")->post("number")->asInteger(true)->maxLen(11)->default(0)->validate();
-        $data["gender"] = $validable->label("Gender")->post("gender")->asInteger(true)->maxLen(11)->default(0)->validate();
-        $data["partsOfSpeech"] = $validable->label("PartsOfSpeech")->post("partsOfSpeech")->asInteger(true)->maxLen(11)->default(0)->validate();
-        $data["article"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(NULL)->validate();
+        $data["numberId"] = $validable->label("Number")->post("number")->asInteger(true)->maxLen(11)->default(0)->validate();
+        $data["genderId"] = $validable->label("Gender")->post("gender")->asInteger(true)->maxLen(11)->default(0)->validate();
+        $data["partOfSpeechId"] = $validable->label("PartsOfSpeech")->post("partsOfSpeech")->asInteger(true)->maxLen(11)->default(0)->validate();
+        $data["articleId"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(NULL)->validate();
         $data["derivativeOf"] = $validable->label("DerivativeOf")->post("derivativeOf")->asString(true)->maxLen(50)->default(NULL)->validate();
     } catch (ValidationException $exp) {
         exit($json->fail()->message($exp->getMessage())->create());

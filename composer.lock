@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eec03c41a0cb5c223cfb6c0345964af6",
+    "content-hash": "64e00415c8b19f74f4489f3f94544116",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -58,16 +58,16 @@
         },
         {
             "name": "nobanno/nobanno",
-            "version": "v2.1.7",
+            "version": "v2.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/skpaul/nobanno.git",
-                "reference": "ec5fa662b899eba25dd27683b5fe237e3258a8d0"
+                "reference": "e01a2bcce209c1510c0d23560748f2dec43138ba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/skpaul/nobanno/zipball/ec5fa662b899eba25dd27683b5fe237e3258a8d0",
-                "reference": "ec5fa662b899eba25dd27683b5fe237e3258a8d0",
+                "url": "https://api.github.com/repos/skpaul/nobanno/zipball/e01a2bcce209c1510c0d23560748f2dec43138ba",
+                "reference": "e01a2bcce209c1510c0d23560748f2dec43138ba",
                 "shasum": ""
             },
             "require": {
@@ -101,9 +101,9 @@
             ],
             "support": {
                 "issues": "https://github.com/skpaul/nobanno/issues",
-                "source": "https://github.com/skpaul/nobanno/tree/v2.1.7"
+                "source": "https://github.com/skpaul/nobanno/tree/v2.1.8"
             },
-            "time": "2024-07-31T10:10:02+00:00"
+            "time": "2024-08-23T04:27:55+00:00"
         }
     ],
     "packages-dev": [],
