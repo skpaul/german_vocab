@@ -7,7 +7,7 @@
     $logger = new Logger(ROOT_DIRECTORY);
     $db = new ExPDO(DB_SERVER, DB_NAME, DB_USER, DB_PASSWORD);
 
-    $counts = $db->fetchAssocs("SELECT fee, count(*) AS quantity FROM cinfo GROUP BY fee");
+    // $counts = $db->fetchAssocs("SELECT fee, count(*) AS quantity FROM cinfo GROUP BY fee");
 
     $iconName = "happy.png";
     if ($logger->hasLogs()) {
@@ -42,9 +42,10 @@
 
 <body onload="checkAutoRefreshStatus()">
     <?php
-        foreach ($counts as $count) {
-            echo "Fee= " . $count["fee"] . ", Quantity= " . $count["quantity"] . "<br>";
-        }
+        echo 'Must enable fee count.';
+        // foreach ($counts as $count) {
+        //     echo "Fee= " . $count["fee"] . ", Quantity= " . $count["quantity"] . "<br>";
+        // }
     ?>
 
     <input type="checkbox" name="" id="toggleAutoRefresh" onclick="checkChanged()">Auto Refresh
