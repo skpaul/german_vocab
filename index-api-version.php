@@ -90,6 +90,7 @@
                                         <button class="btn" type="button" id="search">Search</button>
                                    
                                     <button class="button" type="button" id="next-word">Next</button>
+                                    <a id="go-to-edit" href="">Edit</a>
                                 </div>
                                 <div>
                                    <span id="ipa"></span>
@@ -168,8 +169,7 @@
                     getRandomWord();
                 });
                 
-                // FormStar --->
-                $('form#frm-word').formstar();
+
 
                 function getRandomWord() {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"random", feature:"basic"}, function(response, textStatus, jqXHR) {
@@ -217,6 +217,9 @@
                         $("#genderName").text(data.genderName);
                         $("#partOfSpeechName").text(data.partOfSpeechName);
                         $("#articleName").text(data.articleName);
+                        $editUrl = baseUrl + '/app/edit/word/edit-word.php?session=' + encSessionId + '&id=' + id;
+                        $("#go-to-edit").attr('href', $editUrl);
+
                     });
                 }
 
