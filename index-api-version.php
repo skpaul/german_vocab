@@ -64,7 +64,15 @@
                 line-height: 1;
                 padding: 5px 10px;
                 border-radius: 9px;
-                margin-bottom: 18px;
+            }
+            button#search, button#next-word, a#go-to-edit{
+                border: 1px solid #7b8083;
+                background-color: #1c2128;
+                color: #bdd0e5;
+                font-size: 14px;
+                padding: 2px;
+                border-radius: 5px;
+                cursor: pointer;
             }
 
             ul#examples li{
@@ -103,10 +111,11 @@
                                 <div class="fs-150%">
                                    
                                         <input type="text" name="german" id="german" value="<?=$word?>">
-                                        <button class="btn" type="button" id="search">Search</button>
-                                   
-                                    <button class="button" type="button" id="next-word">Next</button>
-                                    <a id="go-to-edit" href="">Edit</a>
+                                        <div class="mb-1.2">
+                                            <button type="button" id="search">Search</button>
+                                            <button type="button" id="next-word">Next</button>
+                                            <a id="go-to-edit" href="">Edit</a>
+                                        </div>
                                 </div>
                                 <div>
                                    <span id="ipa" title="International Phonetic Alphabet"></span>

@@ -23,7 +23,9 @@ $(function(){
         // ],
       });
 
-    $('form#add-new-word').formstar();
+    $('form#add-new-word').formstar({onSuccessMessage: function(message){
+        //do later.
+    }});
 
 
     // Show the .addDate modal
