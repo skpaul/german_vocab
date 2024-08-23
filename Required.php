@@ -121,7 +121,7 @@ class Required{
          * Prerequisites - sweetModal and moment();
          */
         public static function formstar(){
-            echo '<script src="https://cdn.jsdelivr.net/gh/skpaul/formstar@1.0.5/formstar.min.js"></script>';
+            echo '<script src="https://cdn.jsdelivr.net/gh/skpaul/formstar@1.0.7/formstar.min.js"></script>';
             // echo '<script src="'.BASE_URL.'/assets/plugins/formstar/v1.0.0/formstar.min.js"></script>';
             // echo '<script src="http://localhost/formstar/formstar.js"></script>';
             return new static;

@@ -104,7 +104,7 @@
                                 <!-- german  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">german</label>
-                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-minlen="" data-maxlen="50" type="text" >
+                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-unicode="yes" data-minlen="" data-maxlen="50" type="text" >
                                 </div>
                                 <!-- english  --> 
                                 <div class="field fr6-lg fr12-sm">  
@@ -114,7 +114,7 @@
                                 <!-- ipa  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="">ipa</label>
-                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" type="text" >
+                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional" data-unicode="yes"  data-maxlen="50" type="text" >
                                 </div>
                                 <!-- phoneticSpelling  --> 
                                 <div class="field fr6-lg fr12-sm">  

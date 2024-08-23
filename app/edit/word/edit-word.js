@@ -72,15 +72,6 @@ $(function(){
 
     $(".number").swiftNumericInput({ allowFloat: false, allowNegative: false });
 
-    $('.swiftDate').datepicker({
-        language: 'en',
-        dateFormat: 'dd-mm-yyyy',
-        autoClose: true,
-        onSelect: function(formattedDate, date, inst) {
-            $(inst.el).trigger('change');
-            $(inst.el).removeClass('error');
-        }
-    })
 
     var $icon = $('.buttonIcon');
     var $submitButton = $('.form-submit-button');

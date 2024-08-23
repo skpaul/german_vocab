@@ -47,7 +47,7 @@
     <head>
         <title><?= $pageTitle ?> - <?= ORGANIZATION_SHORT_NAME ?></title>
         <?php
-        Required::gtag()->metaTags()->favicon()->omnicss()->griddle()->sweetModalCSS()->airDatePickerCSS();
+        Required::gtag()->metaTags()->favicon()->omnicss()->griddle()->sweetModalCSS();
         ?>
 
         <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -106,7 +106,7 @@
                                 <!-- german  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="required">german</label>
-                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-minlen="" data-maxlen="50" type="text" value="<?=htmlspecialchars($word->german)?>" > 
+                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-unicode="yes" data-required="required" data-minlen="" data-maxlen="50" type="text" value="<?=htmlspecialchars($word->german)?>" > 
                                 </div>
                                 <!-- english  --> 
                                 <div class="field fr6-lg fr12-sm">  
@@ -116,7 +116,7 @@
                                 <!-- ipa  --> 
                                 <div class="field fr6-lg fr12-sm">  
                                     <label class="">IPA</label>
-                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" type="text" value="<?=htmlspecialchars($word->ipa ?? '')?>" >
+                                    <input name="ipa" id="ipa" title="" class="validate" data-title="ipa" data-datatype="string" data-required="optional"  data-maxlen="50" data-unicode="yes" type="text" value="<?=htmlspecialchars($word->ipa ?? '')?>" >
                                 </div>
                                 <!-- phoneticSpelling  --> 
                                 <div class="field fr6-lg fr12-sm">  
@@ -400,7 +400,7 @@
             var encSessionId = '<?= $encSessionId ?>';
         </script>
         <?php
-        Required::jquery()->hamburgerMenu()->sweetModalJS()->airDatePickerJS()->moment()->formstar()->swiftNumericInput();
+        Required::jquery()->hamburgerMenu()->sweetModalJS()->moment()->formstar()->swiftNumericInput();
         ?>
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script
