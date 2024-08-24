@@ -51,7 +51,7 @@
 
     $word = $_GET["term"];
 
-    $prompt="Meaning, definition, article, number, gender,  part of speech, IPA, phonetic spelling, german spelling and usage examples of the german word $word";
+    $prompt="Meaning, definition, article, number, gender,  part of speech, IPA, phonetic spelling, actual spelling, base/root word, derivatives, singular/plural form, present form, past form, past participle, present participle and usage examples of the german word '$word'";
     
     $json_data = '{
                     "contents": [{

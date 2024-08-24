@@ -145,9 +145,9 @@
                                    
                                         <input type="text" name="german" id="german" value="<?=$word?>">
                                         <div class="mb-1.2">
-                                            <button type="button" id="search">Search</button>
-                                            <button type="button" id="next-word">Next</button>
-                                            <a id="go-to-edit" href="">Edit</a>
+                                            <button type="button" id="search"><span class="m-icons">search</span></button>
+                                            <button type="button" id="next-word"><span class="m-icons">arrow_forward</span></button>
+                                            <a id="go-to-edit" href=""><span class="m-icons">edit</span></a>
                                         </div>
                                 </div>
                                 <div>
@@ -167,15 +167,23 @@
                             </div>
                         </div>
                     </div>
-                    <ul id="examples" style="list-style: disc; margin-left: 19px;">
-                       examples
-                    </ul>
-                    <div id="other-meanings">
-                       other meanings
+                    <div>
+                        <div>Examples:</div>
+                        <ul id="examples" style="list-style: disc; margin-left: 19px;"></ul>
+                    </div>
+
+                    <div>
+                        <div>Other Meanings: </div>
+                        <div id="other-meanings"></div>
+                    </div>
+
+                    <div>
+                        <div>Derivatives/Other forms</div>
                     </div>
                     <div id="derivatives">
-                        derivatives
+                        
                     </div>
+                    
                     <div id="ai-content">
                         AI Generated Content (not reviewed)-
                         <div id="gemini-content">
@@ -245,12 +253,14 @@
                 }
 
                 $('button#search').click(function(e){
+                    $(this).attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
                     germanWord = txtGerman.val();
                     searchWord(germanWord);
                 });
 
                 $('#next-word').click(function(e){
                     e.preventDefault();
+                    $(this).attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
                     getRandomWord();
                 });
 
@@ -259,6 +269,7 @@
                         let data = response.data;
                         txtGerman.val(data.german);
                         txtEnglish.val(data.english);
+                        $('button#next-word').removeAttr('disabled').find('span').html('arrow_forward').removeClass('spinner');
                         getWordDetails(data.id);
                         getExamples(data.german);
                         getOtherMeanings(data.german, data.id);
@@ -292,6 +303,7 @@
                             return;
                         }
                         txtEnglish.val(data.english);
+                        $('button#search').removeAttr('disabled').find('span').html('search').removeClass('spinner');
                         getWordDetails(data.id);
                         getExamples(germanWord);
                         if(encSessionId.length > 0){
