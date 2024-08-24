@@ -77,16 +77,25 @@
 
             ul#examples li{
                 line-height: 1.7;
+                font-size: 80%;
             }
-            ul#examples .de{
+
+            ul#examples span.speak-sentence{
+                /* font-size: 0.8rem; */
+                cursor: pointer;
+            }
+            ul#examples span.de{
                 /* font-size: 14px; */
             }
+            ul#examples span.en{
+                
+            }
+
+
             ul#examples a{
                 border-bottom: 1px dashed #C2D0E5;
             }
-            ul#examples .en{
-                font-size: 90%;
-            }
+
 
             #gemini-content{
                 font-size: 0.8rem;
@@ -219,7 +228,7 @@
             $(function() {
                 $(document).on("click", "span.speak-sentence", function(){
                    let text = $(this).siblings(".de").text();
-                   responsiveVoice.speak(text, "Deutsch Female");
+                   responsiveVoice.speak(text, "Deutsch Female", {pitch: 1, rate: 0.9, volume: 3});
                 });
 
                 var txtGerman = $('#german');
