@@ -214,7 +214,9 @@
             var baseUrl = '<?=BASE_URL?>';
 
             var converter = new showdown.Converter();
-           
+            // responsiveVoice.setDefaultVoice("Deutsch Female");
+            // responsiveVoice.setDefaultRate(0.9);
+            // responsiveVoice.setDefaultVolume(3);
 
             function aud_play_pause(elementId) {
                 var myAudio = document.getElementById(elementId);
@@ -227,8 +229,8 @@
            
             $(function() {
                 $(document).on("click", "span.speak-sentence", function(){
-                   let text = $(this).siblings(".de").text();
-                   responsiveVoice.speak(text, "Deutsch Female", {pitch: 1, rate: 0.9, volume: 3});
+                    let text = $(this).siblings(".de").text();
+                    responsiveVoice.speak(text, "Deutsch Female", {pitch: 1, rate: 0.9, volume: 3});
                 });
 
                 var txtGerman = $('#german');
