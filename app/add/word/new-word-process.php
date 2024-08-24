@@ -40,6 +40,7 @@
         $data["partOfSpeechId"] = $validable->label("PartsOfSpeech")->post("partsOfSpeech")->asInteger(true)->maxLen(11)->default(0)->validate();
         $data["articleId"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(NULL)->validate();
         $data["derivativeOf"] = $validable->label("DerivativeOf")->post("derivativeOf")->asString(true)->maxLen(50)->default(NULL)->validate();
+        $notes = $validable->label("Notes")->post("notes")->asString(true)->maxLen(255)->default(NULL)->validate();
     } catch (ValidationException $exp) {
         exit($json->fail()->message($exp->getMessage())->create());
     }
@@ -52,6 +53,12 @@
 
     $sql = $db->prepareInsertSql($data, "words");
     $result = $db->insert($sql, $data);
+
+    if(isset($notes) && !empty($notes)){
+        $sql = "INSERT INTO notes(wordId, notes) VALUES($result, :notes)";
+        $notes = $db->insert($sql, ["notes"=>$notes]);
+    }
+
     if($result)
         exit($json->success()->message("Saved successfully.")->create());
     else

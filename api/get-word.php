@@ -69,7 +69,19 @@
     }
 
     if($scope == "random"){
-        $sql = "SELECT $columns FROM $from ORDER BY RAND() LIMIT 1";
+        if ($isLoggedin){
+            $sql = "SELECT wordId FROM histories WHERE userId=$userId ORDER BY frequency DESC LIMIT 10";
+            $wordIds = $db->fetchAssocs($sql);
+            $pp = "";
+            foreach ($wordIds as $kk) {
+                $pp .= $kk["wordId"] . ',';
+            }
+            $rr = rtrim($pp, ",");
+            $sql = "SELECT $columns FROM $from WHERE id NOT IN ($rr) ORDER BY RAND() LIMIT 1";
+        }
+        else{
+            $sql = "SELECT $columns FROM $from ORDER BY RAND() LIMIT 1";
+        }
     }
 
     $result = $db->fetchAssoc($sql, $parameters);

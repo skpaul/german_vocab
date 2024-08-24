@@ -192,8 +192,14 @@
                                 
                                 <!-- derivativeOf  --> 
                                 <div class="field fr6-lg fr12-sm">  
-                                    <label class="required">derivativeOf</label>
+                                    <label class="required">Derivative Of</label>
                                     <input name="derivativeOf" id="derivativeOf" title="" class="validate" data-title="derivativeOf" data-datatype="string" data-maxlen="50"  data-required="optional"  type="text">
+                                </div>
+
+                                <!-- Notes  --> 
+                                <div class="field fr6-lg fr12-sm">  
+                                    <label class="required">Notes</label>
+                                    <input name="notes" id="notes" title="" class="validate" data-title="Notes" data-datatype="string" data-maxlen="255" data-unicode="yes"  data-required="optional"  type="text">
                                 </div>
 
                             </div>
