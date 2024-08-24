@@ -88,7 +88,31 @@
                 font-size: 90%;
             }
 
+            #gemini-content{
+                font-size: 0.8rem;
+            }
+            #gemini-content h2{
+                display: none;
+            }
 
+            #gemini-content>p{
+                margin-top: 0.5rem;
+            }
+            #gemini-content>p>strong{
+                font-weight:500;
+            }
+            #gemini-content>ul{
+                list-style: disc;
+                margin-left: 14px;
+                font-size: 0.7rem;
+            }
+            #gemini-content ul>li{
+                margin-top: 3px;
+            }
+            #gemini-content ul>li>strong{
+                font-weight:500;
+            }
+           
         </style>
     </head>
 
@@ -143,6 +167,13 @@
                     <div id="derivatives">
                         derivatives
                     </div>
+                    <div id="ai-content">
+                        AI Generated Content (not reviewed)-
+                        <div id="gemini-content">
+                            gemini-content
+                        </div>
+                    </div>
+                    
                     
                     <div>
                         <button type="button" class="play-button">Play
@@ -167,9 +198,14 @@
         <?php
             Required::jquery()->hamburgerMenu()->moment()->sweetModalJS()->formstar();
         ?>
+        <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+
         <script>
             var encSessionId = '<?=$encSessionId?>';
             var baseUrl = '<?=BASE_URL?>';
+
+            var converter = new showdown.Converter();
+           
 
             function aud_play_pause(elementId) {
                 var myAudio = document.getElementById(elementId);
@@ -192,11 +228,15 @@
                     searchWord(germanWord);
                 }
 
+                $('button#search').click(function(e){
+                    germanWord = txtGerman.val();
+                    searchWord(germanWord);
+                });
+
                 $('#next-word').click(function(e){
                     e.preventDefault();
                     getRandomWord();
                 });
-
 
                 function getRandomWord() {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"random", feature:"basic"}, function(response, textStatus, jqXHR) {
@@ -210,14 +250,10 @@
                             setHistory(data.id);
                         }
                         getDerivatives(data.id);
+                        getGeminiContent(data.german);
                         // getVoice(data.german);
                     });
                 }
-
-                $('button#search').click(function(e){
-                    germanWord = txtGerman.val();
-                    searchWord(germanWord);
-                });
 
                 function searchWord(germanWord) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"basic", term:germanWord}, function(response, textStatus, jqXHR) {
@@ -248,6 +284,7 @@
 
                         getOtherMeanings(data.german, data.id);
                         getDerivatives(data.id);
+                        getGeminiContent(germanWord);
                         // getVoice(data.german);
                     });
                 }
@@ -313,7 +350,12 @@
                     });
                 }
 
-
+                function getGeminiContent(germanWord) {
+                    $.get(baseUrl + '/api/get-gemini-content.php?session=' + encSessionId, {term:germanWord}, function(response, textStatus, jqXHR) {
+                        let content =  converter.makeHtml(response.data);  //response.data ; //
+                        $("div#gemini-content").empty().append(content);
+                    });
+                }
 
                 function getVoice(word) {
                     $.get(baseUrl + '/api/get-voice.php?session=' + encSessionId, {word:word}, function(response, textStatus, jqXHR) {
