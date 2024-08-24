@@ -16,6 +16,7 @@ class Footer{
             <div class="footer-container ">
                     <div class="footer-content-wrapper mt-0.5">
                         <div class="copyright">©{$orgName}, {$year}.</div>
+                        <div><a href="https://responsivevoice.org">responsivevoice.org</a></div>
                         <div class="powered-by">Powered By: Winbip Solutions</div>
                     </div>
             </div>

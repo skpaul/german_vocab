@@ -173,8 +173,7 @@
                             gemini-content
                         </div>
                     </div>
-                    
-                    
+                                      
                     <div>
                         <button type="button" class="play-button">Play
                             <img src="pronounce.png" alt="" srcset="">
@@ -199,6 +198,7 @@
             Required::jquery()->hamburgerMenu()->moment()->sweetModalJS()->formstar();
         ?>
         <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+        <script src="https://code.responsivevoice.org/responsivevoice.js?key=cnXr472y"></script>
 
         <script>
             var encSessionId = '<?=$encSessionId?>';
@@ -217,6 +217,11 @@
             }
            
             $(function() {
+                $(document).on("click", "span.speak-sentence", function(){
+                   let text = $(this).siblings(".de").text();
+                   responsiveVoice.speak(text, "Deutsch Female");
+                });
+
                 var txtGerman = $('#german');
                 var txtEnglish = $('#english');
 
@@ -324,7 +329,7 @@
                                 strGermanWords += ' <a href="'+ url + germanWord + '">'+ germanWord +'</a>';
                             });
                            
-                            let fullSentence = '<span class="de">' + strGermanWords + '</span> - <span class="en"> '+ example.english +' </span>';  
+                            let fullSentence = '<span class="speak-sentence">▶️</span><span class="de">' + strGermanWords + '</span> - <span class="en"> '+ example.english +' </span>';  
                           
                             $('<li />', {html: fullSentence}).appendTo(ul);
                         });
@@ -408,6 +413,8 @@
             }) //document.ready ends.
         </script>
 
+       
+        
     </body>
 
 </html>
