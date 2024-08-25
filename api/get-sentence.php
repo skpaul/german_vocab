@@ -37,23 +37,37 @@
         }
     #endregion
 
-    
-    $contextId = $_GET["contextId"]; 
-   
     $parameters = array();
-    if($contextId){
-        $lastId = $_GET["lastId"]; 
-        $clause = " WHERE contexts.contextId = :contextId AND id>:lastId ORDER BY id LIMIT 1";
+    if(isset($_GET["contextId"]) && !empty($_GET["contextId"])){
+        $contextId = $_GET["contextId"];
+        if(isset($_GET["lastId"]) && !empty($_GET["lastId"])){
+            $lastId = $_GET["lastId"];
+            $parameters["lastId"] = $lastId;
+            
+            $clause = " WHERE contexts.contextId = :contextId AND id>:lastId ORDER BY id LIMIT 1";
+        }
+        else{
+            $clause = " WHERE contexts.contextId = :contextId ORDER BY id LIMIT 1";
+        }
         $parameters["contextId"] = $contextId;
-        $parameters["lastId"] = $lastId;
     }
     else{
         $clause = " ORDER BY RAND() LIMIT 1";
     }
-    $sql = "SELECT
-                id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
-
+    
+    $sql = "SELECT id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
     $result = $db->fetchAssoc($sql, $parameters);
+    $currentId = $result["id"];
+    if($isLoggedin && isset($contextId) && $contextId>0){
+        $lastSession = $db->fetchObject("SELECT id FROM sentence_practice_session WHERE userId = $userId");
+        if($lastSession){
+            $db->update("UPDATE sentence_practice_session SET exampleId=$currentId, contextId=$contextId WHERE id=$lastSession->id");
+        }
+        else{
+            $db->insert("INSERT INTO sentence_practice_session(userId, exampleId, contextId) VALUES($userId, $currentId, $contextId)");
+        }
+    }
+    
     exit($json->success(true)->data($result)->create());
     
 ?>

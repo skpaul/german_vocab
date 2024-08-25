@@ -38,7 +38,8 @@
             }
         }
     #endregion
-    $contexts = $db->fetchObjects("SELECT * FROM contexts WHERE contextId>-1")
+    $contexts = $db->fetchObjects("SELECT * FROM contexts WHERE contextId>-1");
+    $lastSession = $db->fetchObject("SELECT id, exampleId, contextId FROM sentence_practice_session WHERE userId = $userId");
 ?>
 
 <!DOCTYPE html>
@@ -87,11 +88,9 @@
                 
             }
 
-
             ul#examples a{
                 border-bottom: 1px dashed #C2D0E5;
             }
-
 
             #gemini-content{
                 font-size: 0.8rem;
@@ -140,23 +139,55 @@
                                 <div class="fs-150%">
                                         <select id="context">
                                             <?php
-                                                foreach ($contexts as $context) {
+                                                foreach ($contexts as $context){
+                                                    $isSelected = "";
+                                                    if($isLoggedin && $lastSession){
+                                                        if($lastSession->contextId == $context->contextId){
+                                                            $isSelected = "selected";
+                                                        }
+                                                    }
                                             ?>
-                                                <option value="<?=$context->contextId?>"><?=$context->contextName?></option>
+                                                <option value="<?=$context->contextId?>" <?=$isSelected?>><?=$context->contextName?></option>
                                             <?php
                                                 }
                                             ?>
                                         </select>
-                                        <input type="hidden" id="lastId" value="">
+                                        <?php
+                                            $lastId = "";
+                                            if($isLoggedin && $lastSession){
+                                                $lastId = $lastSession->exampleId;
+                                        ?>
+                                            <select id="resume">
+                                                <option value="yes" selected>Continue prev session</option>
+                                                <option value="no">start from beginning</option>
+                                            </select>
+                                        <?php
+                                            }
+                                        ?>
+
+                                        <select id="mode">
+                                            <optgroup>Learn</optgroup>
+                                            <option value="learn">Learn</option>
+                                            <optgroup>Practice</optgroup>
+                                            <option value="en-to-de">EN to DE</option>
+                                            <option value="de-to-en">DE to EN</option>
+                                            <option value="listen">Listen & write</option>
+                                        </select>
+                                        <input type="hidden" id="lastId" value="<?=$lastId?>">
                                         <div id="german"></div>
                                         <div class="mb-1.2">
-                                            <button type="button" id="speak"><span class="m-icons">record_voice_over</span></button>
+                                            <button type="button" id="speak"><span class="m-icons">volume_up</span></button>
                                             <button type="button" id="search"><span class="m-icons">search</span></button>
                                             <button type="button" id="next"><span class="m-icons">arrow_forward</span></button>
                                             <a id="go-to-edit" href=""><span class="m-icons">edit</span></a>
                                         </div>
                                 </div>
                                 <div id="english"></div>
+
+                                <div id="answer-container">
+                                    <input type="text" id="answer">
+                                    <button type="button" id="check">Check</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -180,9 +211,65 @@
         <script>
             var encSessionId = '<?=$encSessionId?>';
             var baseUrl = '<?=BASE_URL?>';
-
+            var prevValue = '<?=$lastSession->exampleId ?? ''?>';
           
-            $(function() {
+            $(function(){      
+                
+                $('#mode').change(function(){
+                    let selectedValue = $(this).val();
+                    if(selectedValue == "learn"){
+                        $('#answer-container').hide();
+                        $('#german').css("visibility", "visible")
+                            $('#english').css("visibility", "visible")
+                    }
+                    else{
+                        $('#answer-container').show();
+                        if(selectedValue == "en-to-de"){
+                            $('#german').css("visibility", "hidden")
+                            $('#english').css("visibility", "visible")
+                        }
+                        if(selectedValue == "de-to-en"){
+                            $('#german').css("visibility", "visible")
+                            $('#english').css("visibility", "hidden")
+                        }
+                        if(selectedValue == "listen"){
+                            $('#german').css("visibility", "hidden")
+                            $('#english').css("visibility", "hidden")
+                        }
+                    }
+                });
+
+                $('#check').click(function(){
+                    let selectedValue = $('#mode').val();
+                    let answer = $('#answer').val();
+                    if(selectedValue == "en-to-de"){
+                        if(answer == $.trim($('#german').text())){
+                            alert("Fine");
+                        }
+                        else{
+                            alert("Wrong");
+                        }
+                    }
+                    if(selectedValue == "de-to-en"){
+                        $('#german').css("visibility", "visible")
+                        $('#english').css("visibility", "hidden")
+                    }
+                    if(selectedValue == "listen"){
+                        $('#german').css("visibility", "hidden")
+                        $('#english').css("visibility", "hidden")
+                    }
+                });
+
+                $("select#resume").change(function(){
+                    let selectedValue = $(this).val();
+                    if(selectedValue == 'yes'){
+                        $('input#lastId').val(prevValue);    
+                    }
+                    else{
+                        prevValue = $('input#lastId').val();
+                        $('input#lastId').val('');
+                    }
+                });
                 $(document).on("click", "#speak", function(){
                     let text = $("#german").text();
                     responsiveVoice.speak(text, "Deutsch Female", {pitch: 1, rate: 0.9, volume: 3});
