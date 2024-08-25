@@ -52,14 +52,27 @@
         ?>
 
         <style>
-            input#german{
+            #settings{
+                display: flex;
+                justify-content: space-between;
+            }
+
+            #settings select{
+                height: unset !important;
+                margin: unset !important;
+                background-color: #1c2128;
+                width: auto;
+            }
+
+            #german{
                 background-color: transparent;
                 border-color: transparent;
-                font-size: 3rem;
+                font-size: 2rem;
                 height: unset !important;
                 line-height: 1;
-                padding: 5px 10px;
+                padding: 5px 0;
                 border-radius: 9px;
+                margin-top: 31px;
             }
 
             button#speak, button#search, button#next, a#go-to-edit{
@@ -70,52 +83,10 @@
                 padding: 2px;
                 border-radius: 5px;
                 cursor: pointer;
+                width: 26px;
             }
 
-            ul#examples li{
-                line-height: 1.7;
-                font-size: 80%;
-            }
 
-            ul#examples span.speak-sentence{
-                /* font-size: 0.8rem; */
-                cursor: pointer;
-            }
-            ul#examples span.de{
-                /* font-size: 14px; */
-            }
-            ul#examples span.en{
-                
-            }
-
-            ul#examples a{
-                border-bottom: 1px dashed #C2D0E5;
-            }
-
-            #gemini-content{
-                font-size: 0.8rem;
-            }
-            #gemini-content h2{
-                display: none;
-            }
-
-            #gemini-content>p{
-                margin-top: 0.5rem;
-            }
-            #gemini-content>p>strong{
-                font-weight:500;
-            }
-            #gemini-content>ul{
-                list-style: disc;
-                margin-left: 14px;
-                font-size: 0.7rem;
-            }
-            #gemini-content ul>li{
-                margin-top: 3px;
-            }
-            #gemini-content ul>li>strong{
-                font-weight:500;
-            }
            
         </style>
     </head>
@@ -137,42 +108,46 @@
                         <div class="container-700 mv-1.5">
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
                                 <div class="fs-150%">
-                                        <select id="context">
-                                            <?php
-                                                foreach ($contexts as $context){
-                                                    $isSelected = "";
-                                                    if($isLoggedin && $lastSession){
-                                                        if($lastSession->contextId == $context->contextId){
-                                                            $isSelected = "selected";
+                                        <div id="settings">
+                                            <select id="context">
+                                                <?php
+                                                    foreach ($contexts as $context){
+                                                        $isSelected = "";
+                                                        if($isLoggedin && $lastSession){
+                                                            if($lastSession->contextId == $context->contextId){
+                                                                $isSelected = "selected";
+                                                            }
                                                         }
+                                                ?>
+                                                    <option value="<?=$context->contextId?>" <?=$isSelected?>><?=$context->contextName?></option>
+                                                <?php
                                                     }
+                                                ?>
+                                            </select>
+                                            <?php
+                                                $lastId = "";
+                                                if($isLoggedin && $lastSession){
+                                                    $lastId = $lastSession->exampleId;
                                             ?>
-                                                <option value="<?=$context->contextId?>" <?=$isSelected?>><?=$context->contextName?></option>
+                                                <select id="resume">
+                                                    <option value="yes" selected>Continue prev session</option>
+                                                    <option value="no">start from beginning</option>
+                                                </select>
                                             <?php
                                                 }
                                             ?>
-                                        </select>
-                                        <?php
-                                            $lastId = "";
-                                            if($isLoggedin && $lastSession){
-                                                $lastId = $lastSession->exampleId;
-                                        ?>
-                                            <select id="resume">
-                                                <option value="yes" selected>Continue prev session</option>
-                                                <option value="no">start from beginning</option>
-                                            </select>
-                                        <?php
-                                            }
-                                        ?>
 
-                                        <select id="mode">
-                                            <optgroup>Learn</optgroup>
-                                            <option value="learn">Learn</option>
-                                            <optgroup>Practice</optgroup>
-                                            <option value="en-to-de">EN to DE</option>
-                                            <option value="de-to-en">DE to EN</option>
-                                            <option value="listen">Listen & write</option>
-                                        </select>
+                                            <select id="mode">
+                                                <optgroup>Learn</optgroup>
+                                                <option value="learn">Learn</option>
+                                                <optgroup>Practice</optgroup>
+                                                <option value="en-to-de">EN to DE</option>
+                                                <option value="de-to-en">DE to EN</option>
+                                                <option value="listen">Listen & write</option>
+                                            </select>
+
+                                        </div>
+
                                         <input type="hidden" id="lastId" value="<?=$lastId?>">
                                         <div id="german"></div>
                                         <div class="mb-1.2">
