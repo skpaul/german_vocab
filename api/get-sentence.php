@@ -57,6 +57,13 @@
     
     $sql = "SELECT id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
     $result = $db->fetchAssoc($sql, $parameters);
+    //if there are no more questions, start from the beginning using the same context-
+    if(!$result){
+        $clause = " WHERE contexts.contextId = :contextId ORDER BY id LIMIT 1";
+        $sql = "SELECT id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
+        $result = $db->fetchAssoc($sql,["contextId"=>$contextId]);
+    }
+    
     $currentId = $result["id"];
     if($isLoggedin && isset($contextId) && $contextId>0){
         $lastSession = $db->fetchObject("SELECT id FROM sentence_practice_session WHERE userId = $userId");

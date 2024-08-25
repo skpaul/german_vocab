@@ -184,7 +184,7 @@
                                 </div>
                                 <div id="english"></div>
 
-                                <div id="answer-container">
+                                <div id="answer-container" class="hidden">
                                     <input type="text" id="answer">
                                     <button type="button" id="check">Check</button>
                                 </div>
