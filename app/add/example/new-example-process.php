@@ -41,8 +41,8 @@
         $data["isPublished"] = 1;
     }
 
-    $sql = "SELECT id FROM examples WHERE english=:english AND german=:german";
-    $isExist = $db->fetchAssoc($sql, ["english"=>$data["english"], "german"=>$data["german"] ]);
+    $sql = "SELECT id FROM examples WHERE english=:english AND german=:german AND contextId=:contextId";
+    $isExist = $db->fetchAssoc($sql, $data);
     
     if($isExist)
         die($json->fail()->message("This sentence already exists.")->create());

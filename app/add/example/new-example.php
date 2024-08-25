@@ -63,6 +63,7 @@
                     <div class="fs-130% c-gray-2 fw-700 mb-1.5"><?= $pageTitle ?></div>
 
                     <section class="mb-1.0">
+                        <div>Ää,  Öö, Üü, ß</div>
                         <input type="text" id="splitter" placeholder="splitter"> <button id="split" type="button">Split</button>
                         <br><br><br>
                         <form id="add-new-word" class="form" action="new-example-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
