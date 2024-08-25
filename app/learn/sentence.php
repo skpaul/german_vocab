@@ -147,7 +147,9 @@
                                             </select>
 
                                         </div>
-
+                                        <div>
+                                        Ää,  Öö, Üü, ß
+                                        </div>
                                         <input type="hidden" id="lastId" value="<?=$lastId?>">
                                         <div id="german"></div>
                                         <div class="mb-1.2">
