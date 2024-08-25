@@ -58,21 +58,33 @@
             }
 
             #settings select{
-                height: unset !important;
                 margin: unset !important;
+                padding: unset !important;
                 background-color: #1c2128;
+                height: 24px !important;
                 width: auto;
+                max-width: 33%;
+                font-size: 11px;
+                border-radius: 8px;
+                
             }
 
-            #german{
+            #german {
                 background-color: transparent;
                 border-color: transparent;
-                font-size: 2rem;
-                height: unset !important;
-                line-height: 1;
-                padding: 5px 0;
+                font-size: 1.5rem;
                 border-radius: 9px;
-                margin-top: 31px;
+                min-height: 60px;
+                margin-right: 18px;
+            }
+
+            #german-buttons{
+                display: flex;
+                margin-top: 6px;
+                justify-content: space-between;
+                min-width: 48px;
+                flex-wrap: wrap;
+                align-items: center;
             }
 
             button#speak, button#search, button#next, a#go-to-edit{
@@ -84,8 +96,16 @@
                 border-radius: 5px;
                 cursor: pointer;
                 width: 26px;
+                height: 26px;
             }
 
+            button#speak{
+                margin-top: 6px;
+            }
+
+            #english{
+                color: #92a2b9;
+            }
 
            
         </style>
@@ -107,7 +127,7 @@
                     <div class="ba bc bg-1">
                         <div class="container-700 mv-1.5">
                             <div class="round bg-2 ba bc pv-2.0 ph-1.5">
-                                <div class="fs-150%">
+                                <div>
                                         <div id="settings">
                                             <select id="context">
                                                 <?php
@@ -147,22 +167,28 @@
                                             </select>
 
                                         </div>
-                                        <div>
-                                        Ää,  Öö, Üü, ß
-                                        </div>
+                                        
                                         <input type="hidden" id="lastId" value="<?=$lastId?>">
-                                        <div id="german"></div>
-                                        <div class="mb-1.2">
-                                            <button type="button" id="speak"><span class="m-icons">volume_up</span></button>
-                                            <button type="button" id="search"><span class="m-icons">search</span></button>
-                                            <button type="button" id="next"><span class="m-icons">arrow_forward</span></button>
-                                            <a id="go-to-edit" href=""><span class="m-icons">edit</span></a>
+                                        <div class="flex mt-2.0">
+                                            <div id="german"></div>
+                                            <div>
+                                                <button type="button" id="speak"><span class="m-icons">volume_up</span></button>
+                                                <button type="button" id="next"><span class="m-icons">arrow_forward</span></button>
+                                            </div>
                                         </div>
+
+                                        <div id="english"></div>
+<!--                                         
+                                        <div class="mb-1.2">
+                                            <button type="button" id="search"><span class="m-icons">search</span></button>
+                                            <a id="go-to-edit" href=""><span class="m-icons">edit</span></a>
+                                        </div> -->
                                 </div>
-                                <div id="english"></div>
+                               
 
                                 <div id="answer-container" class="hidden">
                                     <input type="text" id="answer">
+                                    <div>Ää,  Öö, Üü, ß</div>
                                     <button type="button" id="check">Check</button>
                                 </div>
                             </div>
@@ -256,7 +282,6 @@
 
                 $('#next').click(function(e){
                     e.preventDefault();
-                    $(this).attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
                     getRandomSentence();
                 });
 
@@ -265,6 +290,7 @@
                     let parameters = {};
                     parameters.contextId = contextId;
                     parameters.lastId = $('#lastId').val();
+                    $('#next').attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
 
                     $.get(baseUrl + '/api/get-sentence.php?session=' + encSessionId, parameters, function(response, textStatus, jqXHR) {
                         let example = response.data;
