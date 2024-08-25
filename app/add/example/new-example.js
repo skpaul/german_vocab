@@ -1,27 +1,16 @@
 $(function(){
 
-    $("#dateOnSchedule").change(function(){       
-        var value = $(this).val();
-        var dateValue = moment(value, "DD-MM-YYYY");
-        $('select[name=month]').val(dateValue.month()+1);
-        $('select[name=year]').val(dateValue.year());
-      });
 
-    $('select[name="visitor[]"]').selectize({
-        plugins: ["restore_on_backspace", "clear_button"],
-        delimiter: " - ",
-        persist: false,
-        maxItems: null,
-        hideSelected: true,
-        // valueField: "email",
-        // labelField: "name",
-        // searchField: ["name", "email"],
-        // options: [
-        //   { email: "selectize@risadams.com", name: "Ris Adams" },
-        //   { email: "someone@gmail.com", name: "Someone" },
-        //   { email: "someone-else@yahoo.com", name: "Someone Else" },
-        // ],
-      });
+  $('#split').click(function(){
+        let text = $.trim($('#splitter').val());
+        let arrText = text.split(".");
+      
+        $('#german').val(arrText[0]);
+        let eng = arrText[1];
+        eng = eng.replace('(','');
+        eng = eng.replace(')','');
+        $('#english').val(eng);
+  });
 
     $('form#add-new-word').formstar({onSuccessMessage: function(message){
         //do later.

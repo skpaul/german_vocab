@@ -32,6 +32,7 @@
         }
     #endregion
 
+    $contexts = $db->fetchObjects("select * from contexts where contextId>-1")
     
 ?>
 
@@ -62,18 +63,34 @@
                     <div class="fs-130% c-gray-2 fw-700 mb-1.5"><?= $pageTitle ?></div>
 
                     <section class="mb-1.0">
+                        <input type="text" id="splitter" placeholder="splitter"> <button id="split" type="button">Split</button>
+                        <br><br><br>
                         <form id="add-new-word" class="form" action="new-example-process.php?session=<?= $encSessionId ?>" method="post" enctype="multipart/form-data">
                             <div class="grid fr1">
                                 <!-- german  --> 
                                 <div class="field">  
-                                    <label class="required">german</label>
-                                    <input name="german" id="german" title="" class="validate" data-title="german" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
+                                    <label class="required">German</label>
+                                    <input name="german" id="german" title="" class="validate" data-title="german" data-unicode="yes" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
                                 </div>
                                 <!-- english  --> 
                                 <div class="field">  
-                                    <label class="required">english</label>
+                                    <label class="required">English</label>
                                     <input name="english" id="english" title="" class="validate" data-title="english" data-datatype="string" data-required="required" data-maxlen="255" type="text" >
                                 </div>
+                                <!-- context  --> 
+                                <div class="field">  
+                                    <label class="">Context</label>
+                                    <select name="contextId" class="validate" data-required="required">
+                                        <?php
+                                            foreach ($contexts as $context) {
+                                        ?>
+                                                <option value="<?=$context->contextId?>"><?=$context->contextName?></option>
+                                        <?php
+                                            }
+                                        ?>
+                                    </select>
+                                </div>
+
                             </div>
                             <div class="flex ai-center">
                                 <input type="hidden" name="submitted" value="1">   

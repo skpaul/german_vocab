@@ -31,6 +31,7 @@
     try {
         $data["english"] = $validable->label("English")->post("english")->required()->asString(true)->maxLen(255)->validate();
         $data["german"] = $validable->label("German")->post("german")->required()->asString(true)->maxLen(255)->validate();
+        $data["contextId"] = $validable->label("Context")->post("contextId")->required()->asInteger(false)->validate();
     } catch (ValidationException $exp) {
         exit($json->fail()->message($exp->getMessage())->create());
     }

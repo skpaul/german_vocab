@@ -42,6 +42,7 @@ class ApplicantHeaderNav
                     <!-- <div class="container"> -->
                         <nav id="mainTopNav" class="main-top-nav">
                             <a href="$baseUrl/index-api-version.php{$session}"><span class="m-icons mr-0.2">home</span><span>Home</span></a>                           
+                            <a href="$baseUrl/app/learn/sentence.php{$session}"><span class="m-icons mr-0.2">home</span><span>Learn Sentence</span></a>                           
                             <a href="$baseUrl/app/add/word/new-word.php{$session}"><span class="m-icons mr-0.2">home</span><span>Add Word</span></a>                           
                             <a href="$baseUrl/app/add/example/new-example.php{$session}"><span class="m-icons mr-0.2">home</span><span>Add Example</span></a>                           
                                                     
