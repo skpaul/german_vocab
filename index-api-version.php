@@ -285,6 +285,8 @@
                 function searchWord(germanWord) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"basic", term:germanWord}, function(response, textStatus, jqXHR) {
                         let data = response.data;
+                        console.log('going to search-');
+                        console.log(data);
                         if(data === false){
                             txtEnglish.val("");
                             $("#ipa").text("");
@@ -320,6 +322,8 @@
                 function getWordDetails(id) {
                     $.get(baseUrl + '/api/get-word.php?session=' + encSessionId, {lang:"german", scope:"find", feature:"maximum", id:id}, function(response, textStatus, jqXHR) {
                         let data = response.data;
+                        console.log('going for word details');
+                        console.log(data);
                         $("#ipa").text(data.ipa);
                         $("#phoneticSpelling").text(data.phoneticSpelling);
                         $("#definition").text(data.definition);

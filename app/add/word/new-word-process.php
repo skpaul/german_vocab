@@ -38,7 +38,7 @@
         $data["numberId"] = $validable->label("Number")->post("number")->asInteger(true)->maxLen(11)->default(0)->validate();
         $data["genderId"] = $validable->label("Gender")->post("gender")->asInteger(true)->maxLen(11)->default(0)->validate();
         $data["partOfSpeechId"] = $validable->label("PartsOfSpeech")->post("partsOfSpeech")->asInteger(true)->maxLen(11)->default(0)->validate();
-        $data["articleId"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(NULL)->validate();
+        $data["articleId"] = $validable->label("Article")->post("article")->asString(true)->maxLen(5)->default(0)->validate();
         $data["derivativeOf"] = $validable->label("DerivativeOf")->post("derivativeOf")->asString(true)->maxLen(50)->default(NULL)->validate();
         $notes = $validable->label("Notes")->post("notes")->asString(true)->maxLen(255)->default(NULL)->validate();
     } catch (ValidationException $exp) {
