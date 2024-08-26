@@ -31,15 +31,12 @@
     try {
         $data["english"] = $validable->label("English")->post("english")->required()->asString(true)->maxLen(255)->validate();
         $data["german"] = $validable->label("German")->post("german")->required()->asString(true)->maxLen(255)->validate();
-        $data["contextId"] = $validable->label("Context")->post("contextId")->required()->asInteger(false)->validate();
+        $data["contextId"] = $validable->label("Context")->post("contextId")->asInteger(false)->default(0)->validate();
     } catch (ValidationException $exp) {
         exit($json->fail()->message($exp->getMessage())->create());
     }
 
-    $data["isPublished"] = 0;
-    if($userId == 1){
-        $data["isPublished"] = 1;
-    }
+
 
     $sql = "SELECT id FROM examples WHERE english=:english AND german=:german AND contextId=:contextId";
     $isExist = $db->fetchAssoc($sql, $data);
@@ -47,6 +44,10 @@
     if($isExist)
         die($json->fail()->message("This sentence already exists.")->create());
 
+    $data["isPublished"] = 0;
+    if($userId == 1){
+        $data["isPublished"] = 1;
+    }
     $sql = $db->prepareInsertSql($data, "examples");
     $result = $db->insert($sql, $data);
     if($result)
