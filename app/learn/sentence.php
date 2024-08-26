@@ -69,13 +69,19 @@
                 
             }
 
-            #german {
+            #german{
                 background-color: transparent;
                 border-color: transparent;
                 font-size: 1.5rem;
                 border-radius: 9px;
                 min-height: 60px;
                 margin-right: 18px;
+            }
+
+            #german a:hover{
+                /* text-decoration: underline; */
+                border-bottom-width: 1px;
+                border-bottom-style: dashed;
             }
 
             #german-buttons{
