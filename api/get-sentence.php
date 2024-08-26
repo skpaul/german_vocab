@@ -40,29 +40,34 @@
     $parameters = array();
     if(isset($_GET["contextId"]) && !empty($_GET["contextId"])){
         $contextId = $_GET["contextId"];
+        $parameters["contextId"] = $contextId;
+        $totalRows = $db->fetchAssoc("SELECT COUNT(id) AS quantity FROM examples WHERE contextId=:contextId", $parameters);
         if(isset($_GET["lastId"]) && !empty($_GET["lastId"])){
             $lastId = $_GET["lastId"];
             $parameters["lastId"] = $lastId;
             
-            $clause = " WHERE contexts.contextId = :contextId AND id>:lastId ORDER BY id LIMIT 1";
+            $sql = "SELECT a.id, a.german, a.english, b.nthPosition FROM examples AS a INNER JOIN (SELECT ROW_NUMBER() OVER (ORDER BY id) AS nthPosition, id FROM examples WHERE contextId = :contextId) AS b ON a.id = b.id WHERE a.id > :lastId  ORDER BY id LIMIT 1";
+
+            $result = $db->fetchAssoc($sql, $parameters);
+            //if there are no more examples, start from the beginning using the same context-
+            if(!$result){
+                $sql = "SELECT a.id, a.german, a.english, b.nthPosition FROM examples AS a INNER JOIN (SELECT ROW_NUMBER() OVER (ORDER BY id) AS nthPosition, id FROM examples WHERE contextId = :contextId) AS b ON a.id = b.id ORDER BY id LIMIT 1";
+                $result = $db->fetchAssoc($sql,["contextId"=>$contextId]);
+            }
         }
         else{
-            $clause = " WHERE contexts.contextId = :contextId ORDER BY id LIMIT 1";
+            $sql = "SELECT a.id, a.german, a.english, b.nthPosition FROM examples AS a INNER JOIN (SELECT ROW_NUMBER() OVER (ORDER BY id) AS nthPosition, id FROM examples WHERE contextId = :contextId) AS b ON a.id = b.id ORDER BY id LIMIT 1";
+            $result = $db->fetchAssoc($sql,["contextId"=>$contextId]);
         }
-        $parameters["contextId"] = $contextId;
     }
     else{
-        $clause = " ORDER BY RAND() LIMIT 1";
+        // $sql = "SELECT id, english, german FROM examples ORDER BY RAND() LIMIT 1";
+        $sql = "SELECT a.id, a.german, a.english, b.nthPosition FROM examples AS a INNER JOIN (SELECT ROW_NUMBER() OVER (ORDER BY id) AS nthPosition, id FROM examples) AS b ON a.id = b.id ORDER BY RAND() LIMIT 1";
+        $result = $db->fetchAssoc($sql);
+        $totalRows = $db->fetchAssoc("SELECT COUNT(id) AS quantity FROM examples");
     }
-    
-    $sql = "SELECT id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
-    $result = $db->fetchAssoc($sql, $parameters);
-    //if there are no more questions, start from the beginning using the same context-
-    if(!$result){
-        $clause = " WHERE contexts.contextId = :contextId ORDER BY id LIMIT 1";
-        $sql = "SELECT id, english, german, contextName FROM examples INNER JOIN contexts ON examples.contextId = contexts.contextId $clause";
-        $result = $db->fetchAssoc($sql,["contextId"=>$contextId]);
-    }
+
+    $result["totalRows"] = $totalRows["quantity"];
     
     $currentId = $result["id"];
     if($isLoggedin && isset($contextId) && $contextId>0){

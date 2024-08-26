@@ -169,6 +169,7 @@
                                         </div>
                                         
                                         <input type="hidden" id="lastId" value="<?=$lastId?>">
+                                        <div id="position"></div>
                                         <div class="flex mt-2.0">
                                             <div id="german"></div>
                                             <div>
@@ -278,14 +279,14 @@
                     responsiveVoice.speak(text, "Deutsch Female", {pitch: 1, rate: 0.9, volume: 3});
                 });
 
-                getRandomSentence();
+                getSentence();
 
                 $('#next').click(function(e){
                     e.preventDefault();
-                    getRandomSentence();
+                    getSentence();
                 });
 
-                function getRandomSentence() {
+                function getSentence() {
                     let contextId = $("#context").val();
                     let parameters = {};
                     parameters.contextId = contextId;
@@ -293,6 +294,7 @@
                     $('#next').attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
 
                     $.get(baseUrl + '/api/get-sentence.php?session=' + encSessionId, parameters, function(response, textStatus, jqXHR) {
+                        console.log(response.data);
                         let example = response.data;
                         let german = example.german;
                         let english = example.english;
@@ -305,6 +307,7 @@
                             $('div#german').html(strGermanWords);
                             $('div#english').html(english);
                             $('#lastId').val(example.id);
+                            $('#position').text(example.nthPosition + ' of ' + example.totalRows);
                         $('button#next').removeAttr('disabled').find('span').html('arrow_forward').removeClass('spinner');
                     });
                 }
