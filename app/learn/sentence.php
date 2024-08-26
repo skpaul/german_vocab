@@ -70,12 +70,14 @@
             }
 
             #german{
+                color: #d3c655;
                 background-color: transparent;
                 border-color: transparent;
                 font-size: 1.5rem;
                 border-radius: 9px;
                 min-height: 60px;
                 margin-right: 18px;
+
             }
 
             #german a:hover{
@@ -300,7 +302,7 @@
                     $('#next').attr('disabled', 'disabled').find('span').html('autorenew').addClass('spinner');
 
                     $.get(baseUrl + '/api/get-sentence.php?session=' + encSessionId, parameters, function(response, textStatus, jqXHR) {
-                        console.log(response.data);
+                        // console.log(response.data);
                         let example = response.data;
                         let german = example.german;
                         let english = example.english;
@@ -308,7 +310,8 @@
                             let strGermanWords = "";
                             let url = baseUrl + '/index-api-version.php?session=' + encSessionId + '&word=';
                             arrGermanWords.forEach(function(germanWord){
-                                strGermanWords += ' <a href="'+ url + germanWord + '">'+ germanWord +'</a>';
+                                let cleaned = germanWord.replace(",","").replace("?","");
+                                strGermanWords += ' <a href="'+ url + cleaned + '">'+ germanWord +'</a>';
                             });
                             $('div#german').html(strGermanWords);
                             $('div#english').html(english);
